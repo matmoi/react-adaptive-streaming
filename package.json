@@ -1,0 +1,22 @@
+{
+  "name": "react-adaptive-streaming",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "dashjs": "^2.4.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-json-tree": "^0.10.7",
+    "video.js": "^5.19.1",
+    "videojs-contrib-dash": "^2.8.1"
+  },
+  "devDependencies": {
+    "react-scripts": "0.9.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
