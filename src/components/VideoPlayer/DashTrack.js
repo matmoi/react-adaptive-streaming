@@ -1,10 +1,17 @@
-
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 import JSONTree from 'react-json-tree'
 import dashjs from 'dashjs'
+import { Panel, Button } from 'react-bootstrap'
 
 export default class DashTrack extends React.Component {
+
+    constructor(...args) {
+        super(...args)
+        this.state = {
+            open: true
+        }
+    }
 
     componentDidMount(){
         const { mediaPlayer, type } = this.props
@@ -19,11 +26,13 @@ export default class DashTrack extends React.Component {
         const { mediaPlayer, type } = this.props
         const track = mediaPlayer.getCurrentTrackFor(type)
         const qualityIndex = mediaPlayer.getQualityFor(type)
+        const header = <h5>Dash {type} track</h5>
         if (track && qualityIndex !== null) {
             return (
                 <div>
-                    <h2>Dash { type } track</h2>
-                    <JSONTree data={ {
+                    <Button onClick={ ()=> this.setState({ open: !this.state.open })} bsStyle="primary">Dash { type } track</Button>
+                    <Panel collapsible expanded={this.state.open} bsClass="custom-panel">
+                        <JSONTree hideRoot="true" data={ {
                         qualityIndex: qualityIndex,
                         bandwidth: track.bitrateList[qualityIndex].bandwidth,
                         width: track.bitrateList[qualityIndex].width,
@@ -32,10 +41,11 @@ export default class DashTrack extends React.Component {
                         contentProtection: track.contentProtection,
                         mimeType: track.mimeType
                     } } />
+                    </Panel>
                 </div>
             )
         } else {
-            return (<div><h2>Dash {type} track</h2></div>)
+            return (<div>{ header }</div>)
         }
     }
 }

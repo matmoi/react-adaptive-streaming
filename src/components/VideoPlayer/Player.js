@@ -1,11 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 import videojs from 'video.js'
 import 'video.js/dist/video-js.min.css'
 import 'videojs-contrib-dash'
 import PlayerStream from './PlayerStream.js'
 import DashStream from './DashStream.js'
 import PlayerInfo from './PlayerInfo.js'
+
+import { Col, Row, Grid } from 'react-bootstrap'
 
 export default class VideoPlayer extends React.Component {
 
@@ -43,37 +45,30 @@ export default class VideoPlayer extends React.Component {
   render() {
     const isDash = this.player ? this.player.currentSource().type === 'application/dash+xml' : false
     return (
-      <div>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <div data-vjs-player>
+      <Grid fluid="true">
+        <Row className="show-grid">
+          <Col md={2}>
+            <code>Event logs</code>
+          </Col>
+          <Col md={6}>
+                <div data-vjs-player className="player">
                   <video ref={ node => this.videoNode = node } className="video-js vjs-default-skin"></video>
                 </div>
-              </td>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      <PlayerInfo player={this.player} playerready={ this.state.playerready }/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {isDash ? (
-                        <DashStream mediaPlayer={this.player.dash.mediaPlayer} />
-                      ) : (
-                        <PlayerStream player={this.player} loadedmetadata={ this.state.loadedmetadata }/>
-                      )}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          </Col>
+          <Col md={4}>
+            <div>
+                <PlayerInfo player={this.player} playerready={ this.state.playerready }/>
+            </div>
+            <div>
+                {isDash ? (
+                  <DashStream mediaPlayer={this.player.dash.mediaPlayer} />
+                ) : (
+                  <PlayerStream player={this.player} loadedmetadata={ this.state.loadedmetadata }/>
+                )}
+            </div>
+          </Col>
+        </Row>
+      </Grid>
     )
   }
 }

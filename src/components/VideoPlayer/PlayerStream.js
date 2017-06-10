@@ -10,7 +10,7 @@ export default class PlayerStream extends React.Component {
             return (
                 <div>
                     <h1>Stream</h1>
-                    <JSONTree data={ {
+                    <JSONTree hideRoot="true" data={ {
                         src: player.currentSource().src,
                         duration: player.duration(),
                         type: player.currentSource().type,

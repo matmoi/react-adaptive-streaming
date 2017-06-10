@@ -1,9 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 import JSONTree from 'react-json-tree'
 import videojs from 'video.js'
+import { Panel, Button } from 'react-bootstrap'
 
 export default class PlayerInfo extends React.Component {
+
+    constructor(...args) {
+        super(...args)
+        this.state = {
+            open: true
+        }
+    }
 
     render() {
         const { player, playerready } = this.props
@@ -21,8 +29,10 @@ export default class PlayerInfo extends React.Component {
         }
         return (
             <div>
-                <h1>Player</h1>
-                <JSONTree data={ playerInfo } />
+                <Button onClick={ ()=> this.setState({ open: !this.state.open })} bsStyle="primary">Player</Button>
+                <Panel collapsible expanded={this.state.open} bsClass="custom-panel">
+                    <JSONTree hideRoot="true" data={ playerInfo } />
+                </Panel>
             </div>
         )
     }
