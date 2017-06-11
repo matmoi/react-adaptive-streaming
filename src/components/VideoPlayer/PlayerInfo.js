@@ -2,16 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import JSONTree from 'react-json-tree'
 import videojs from 'video.js'
-import { Panel, Button } from 'react-bootstrap'
+import { OverlayTrigger, Button, Popover } from 'react-bootstrap'
 
 export default class PlayerInfo extends React.Component {
-
-    constructor(...args) {
-        super(...args)
-        this.state = {
-            open: true
-        }
-    }
 
     render() {
         const { player, playerready } = this.props
@@ -27,20 +20,23 @@ export default class PlayerInfo extends React.Component {
                 height: player.height()
             }
         }
+        const popoverClickRootClose = (
+            <Popover id="popover-trigger-click-root-close" positionLeft="0">
+                <JSONTree hideRoot="true" shouldExpandNode={ (keyName, data, level) => true } data={ playerInfo } />
+            </Popover>
+        )
+
         return (
-            <div>
-                <Button onClick={ ()=> this.setState({ open: !this.state.open })} bsStyle="primary">Player</Button>
-                <Panel collapsible expanded={this.state.open} bsClass="custom-panel">
-                    <JSONTree hideRoot="true" data={ playerInfo } />
-                </Panel>
-            </div>
+            <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={ popoverClickRootClose }>
+                <Button>Player info</Button>
+            </OverlayTrigger>
         )
     }
 }
 
 PlayerInfo.propTypes = {
-  player: PropTypes.object,
-  playerready: PropTypes.bool
+    player: PropTypes.object,
+    playerready: PropTypes.bool
 };
 
 PlayerInfo.defaultProps = {

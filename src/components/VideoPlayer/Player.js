@@ -5,9 +5,11 @@ import 'video.js/dist/video-js.min.css'
 import 'videojs-contrib-dash'
 import PlayerStream from './PlayerStream.js'
 import DashStream from './DashStream.js'
+import DashTrack from './DashTrack.js'
+import DashMetrics from './DashMetrics.js'
 import PlayerInfo from './PlayerInfo.js'
 
-import { Col, Row, Grid } from 'react-bootstrap'
+import { PageHeader, Col, Row, Grid } from 'react-bootstrap'
 
 export default class VideoPlayer extends React.Component {
 
@@ -45,30 +47,41 @@ export default class VideoPlayer extends React.Component {
   render() {
     const isDash = this.player ? this.player.currentSource().type === 'application/dash+xml' : false
     return (
-      <Grid fluid="true">
-        <Row className="show-grid">
-          <Col md={2}>
-            <code>Event logs</code>
-          </Col>
-          <Col md={6}>
-                <div data-vjs-player className="player">
-                  <video ref={ node => this.videoNode = node } className="video-js vjs-default-skin"></video>
+      <div>
+        <PageHeader>
+          <span>
+            Videojs ABR dashboard <small> HLS and DASH stream compliance tool</small>
+          </span>
+          <span className="player-info">
+            <PlayerInfo player={this.player} playerready={ this.state.playerready }/>
+          </span>
+        </PageHeader>
+        <Grid fluid="true">
+          <Row className="show-grid">
+            <Col md={3}>
+              {isDash ? (
+                <div>
+                <DashStream mediaPlayer={this.player.dash.mediaPlayer} />
+                <DashTrack type='video' mediaPlayer={ this.player.dash.mediaPlayer } />
+                <DashTrack type='audio' mediaPlayer={ this.player.dash.mediaPlayer } />
+                <DashMetrics type='video' mediaPlayer={ this.player.dash.mediaPlayer } />
+                <DashMetrics type='audio' mediaPlayer={ this.player.dash.mediaPlayer } />
                 </div>
-          </Col>
-          <Col md={4}>
-            <div>
-                <PlayerInfo player={this.player} playerready={ this.state.playerready }/>
-            </div>
-            <div>
-                {isDash ? (
-                  <DashStream mediaPlayer={this.player.dash.mediaPlayer} />
-                ) : (
-                  <PlayerStream player={this.player} loadedmetadata={ this.state.loadedmetadata }/>
-                )}
-            </div>
-          </Col>
-        </Row>
-      </Grid>
+              ) : (
+                <PlayerStream player={this.player} loadedmetadata={ this.state.loadedmetadata }/>
+              )}
+            </Col>
+            <Col md={5}>
+              <div data-vjs-player className="player">
+                <video ref={ node => this.videoNode = node } className="video-js vjs-default-skin" data-setup='{"fluid": true}'></video>
+              </div>
+            </Col>
+            <Col md={4}>
+              <code>Event logs</code>
+            </Col>
+          </Row>
+        </Grid>
+      </div>
     )
   }
 }
