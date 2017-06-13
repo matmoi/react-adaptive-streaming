@@ -32,8 +32,8 @@ export default class PlayerStream extends React.Component {
 }
 
 PlayerStream.propTypes = {
-  player: PropTypes.object,
-  loadedmetadata: PropTypes.bool
+    player: PropTypes.object,
+    loadedmetadata: PropTypes.bool
 };
 
 PlayerStream.defaultProps = {

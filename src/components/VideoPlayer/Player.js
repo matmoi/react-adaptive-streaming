@@ -4,12 +4,9 @@ import videojs from 'video.js'
 import 'video.js/dist/video-js.min.css'
 import 'videojs-contrib-dash'
 import PlayerStream from './PlayerStream.js'
-import DashStream from './DashStream.js'
-import DashTrack from './DashTrack.js'
-import DashMetrics from './DashMetrics.js'
 import PlayerInfo from './PlayerInfo.js'
-
 import { PageHeader, Col, Row, Grid } from 'react-bootstrap'
+import Info from './Dash/Info.js'
 
 export default class VideoPlayer extends React.Component {
 
@@ -45,30 +42,24 @@ export default class VideoPlayer extends React.Component {
   // so videojs won't create additional wrapper in the DOM
   // see https://github.com/videojs/video.js/pull/3856
   render() {
-    const isDash = this.player ? this.player.currentSource().type === 'application/dash+xml' : false
+    const isDash = this.player ? this.player.dash != null : false
     return (
       <div>
         <PageHeader>
           <span>
             Videojs ABR dashboard <small> HLS and DASH stream compliance tool</small>
           </span>
-          <span className="player-info">
+          <span style={ {float:"right"} }>
             <PlayerInfo player={this.player} playerready={ this.state.playerready }/>
           </span>
         </PageHeader>
-        <Grid fluid="true">
+        <Grid fluid={ true }>
           <Row className="show-grid">
             <Col md={3}>
               {isDash ? (
-                <div>
-                <DashStream mediaPlayer={this.player.dash.mediaPlayer} />
-                <DashTrack type='video' mediaPlayer={ this.player.dash.mediaPlayer } />
-                <DashTrack type='audio' mediaPlayer={ this.player.dash.mediaPlayer } />
-                <DashMetrics type='video' mediaPlayer={ this.player.dash.mediaPlayer } />
-                <DashMetrics type='audio' mediaPlayer={ this.player.dash.mediaPlayer } />
-                </div>
+                <Info player={ this.player } />
               ) : (
-                <PlayerStream player={this.player} loadedmetadata={ this.state.loadedmetadata }/>
+                <PlayerStream player={ this.player } loadedmetadata={ this.state.loadedmetadata }/>
               )}
             </Col>
             <Col md={5}>
@@ -104,10 +95,7 @@ VideoPlayer.defaultProps = {
   preload: "auto",
   controls: true,
   loop: false,
-  width: 640,
-  height: 480,
-  sources: [
-    {src:'https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4',
+  sources: [{     src:'https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4',
     type:'video/mp4'}
   ]
 };

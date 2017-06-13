@@ -22,7 +22,7 @@ export default class PlayerInfo extends React.Component {
         }
         const popoverClickRootClose = (
             <Popover id="popover-trigger-click-root-close" positionLeft="0">
-                <JSONTree hideRoot="true" shouldExpandNode={ (keyName, data, level) => true } data={ playerInfo } />
+                <JSONTree hideRoot={ true } shouldExpandNode={ (keyName, data, level) => true } data={ playerInfo } />
             </Popover>
         )
 
