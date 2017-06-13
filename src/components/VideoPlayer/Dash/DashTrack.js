@@ -25,28 +25,29 @@ export default class DashTrack extends React.Component {
     render() {
         const { mediaPlayer, type } = this.props
         const track = mediaPlayer.getCurrentTrackFor(type)
-        const qualityIndex = mediaPlayer.getQualityFor(type)
         const header = <h5>Dash {type} track</h5>
-        if (track && qualityIndex !== null) {
-            return (
-                <div>
-                    <Button onClick={ ()=> this.setState({ open: !this.state.open })} bsStyle="primary">Dash { type } track</Button>
-                    <Panel collapsible expanded={this.state.open} bsClass="custom-panel">
-                        <JSONTree hideRoot="true" data={ {
-                        qualityIndex: qualityIndex,
-                        bandwidth: track.bitrateList[qualityIndex].bandwidth,
-                        width: track.bitrateList[qualityIndex].width,
-                        height: track.bitrateList[qualityIndex].height,
-                        codec: track.codec,
-                        contentProtection: track.contentProtection,
-                        mimeType: track.mimeType
-                    } } />
-                    </Panel>
-                </div>
-            )
-        } else {
-            return (<div>{ header }</div>)
+        if (track !== null) {
+            const qualityIndex = mediaPlayer.getQualityFor(type)
+            if (qualityIndex !== null) {
+                return (
+                    <div>
+                        <Button onClick={ ()=> this.setState({ open: !this.state.open })} bsStyle="primary">Dash { type } track</Button>
+                        <Panel collapsible expanded={this.state.open} bsClass="custom-panel">
+                            <JSONTree hideRoot={ true } data={ {
+                            qualityIndex: qualityIndex,
+                            bandwidth: track.bitrateList[qualityIndex].bandwidth,
+                            width: track.bitrateList[qualityIndex].width,
+                            height: track.bitrateList[qualityIndex].height,
+                            codec: track.codec,
+                            contentProtection: track.contentProtection,
+                            mimeType: track.mimeType
+                        } } />
+                        </Panel>
+                    </div>
+                )
+            }
         }
+        return (<div>{ header }</div>)
     }
 }
 

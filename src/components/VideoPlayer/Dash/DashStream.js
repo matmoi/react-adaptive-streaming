@@ -34,7 +34,7 @@ export default class DashStream extends React.Component {
             <div>
                 <Button onClick={ ()=> this.setState({ open: !this.state.open })} bsStyle="primary">Dash Stream</Button>
                 <Panel collapsible expanded={this.state.open} bsClass="custom-panel">
-                    <JSONTree hideRoot="true" data={ {
+                    <JSONTree hideRoot={ true } data={ {
                     version: mediaPlayer.getVersion(),
                     source: mediaPlayer.getSource(),
                     duration: mediaPlayer.duration(),

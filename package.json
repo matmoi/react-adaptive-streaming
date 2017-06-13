@@ -8,7 +8,7 @@
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.5.4",
     "react-json-tree": "^0.10.9",
-    "video.js": "^5.19.2",
+    "video.js": "^5.20.1",
     "videojs-contrib-dash": "^2.9.0"
   },
   "devDependencies": {

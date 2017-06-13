@@ -20,6 +20,6 @@ export default class Info extends React.Component {
     }
 }
 
-DashTrack.propTypes = {
+Info.propTypes = {
     player: PropTypes.object.isRequired
 };
