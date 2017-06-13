@@ -5,7 +5,7 @@ class App extends Component {
   render() {
     return (
       // <Player sources={ [{src:'/media/ElephantsDream/master.m3u8', type:'application/x-mpegURL'}] }/>
-      <Player sources={ [{src:'/media/ElephantsDream/stream.mdp', type:'application/dash+xml'}] }/>
+      <Player sources={ [{src:'/media/ElephantsDream/stream.mpd', type:'application/dash+xml'}] }/>
     );
   }
 }

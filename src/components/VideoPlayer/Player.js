@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-// import videojs from 'video.js'
+import videojs from 'video.js'
 // import 'videojs-contrib-hls'
 import 'videojs-contrib-dash'
 import 'video.js/dist/video-js.min.css'
@@ -11,23 +11,23 @@ import Info from './Dash/Info.js'
 
 export default class VideoPlayer extends React.Component {
 
- constructor(props) {
+  constructor(props) {
     super(props)
     this.player = null
     this.state = {
-      loadedmetadata : false,
-      playerready : false
+      loadedmetadata: false,
+      playerready: false
     }
   }
 
 
   componentDidMount() {
-    // instantiate video.js
-    // const videojs = window.videojs(this.videoNode, this.props, function onPlayerReady() {
-    this.player = window.videojs(this.videoNode, this.props, function onPlayerReady() {
-      this.setState({playerready: true})
+    // this.player = window.videojs(this.videoNode, this.props, function onPlayerReady() {
+
+    this.player = videojs(this.videoNode, this.props, function onPlayerReady() {
+      this.setState({ playerready: true })
       this.player.on('loadedmetadata', () => {
-        this.setState({loadedmetadata: true})
+        this.setState({ loadedmetadata: true })
       })
     }.bind(this));
   }
@@ -46,27 +46,27 @@ export default class VideoPlayer extends React.Component {
   render() {
     const isDash = this.player ? this.player.dash != null : false
     return (
-      <div>
+      <div >
         <PageHeader>
           <span>
             Videojs ABR dashboard <small> HLS and DASH stream compliance tool</small>
           </span>
-          <span style={ {float:"right"} }>
-            <PlayerInfo player={this.player} playerready={ this.state.playerready }/>
+          <span style={{ float: "right" }}>
+            <PlayerInfo player={this.player} playerready={this.state.playerready} />
           </span>
         </PageHeader>
-        <Grid fluid={ true }>
+        <Grid fluid={true}>
           <Row className="show-grid">
             <Col md={3}>
               {isDash ? (
-                <Info player={ this.player } />
+                <Info player={this.player} />
               ) : (
-                <PlayerStream player={ this.player } loadedmetadata={ this.state.loadedmetadata }/>
-              )}
+                  <PlayerStream player={this.player} loadedmetadata={this.state.loadedmetadata} />
+                )}
             </Col>
             <Col md={5}>
               <div data-vjs-player className="player">
-                <video ref={ node => this.videoNode = node } className="video-js vjs-default-skin" data-setup='{"fluid": true}'></video>
+                <video ref={node => this.videoNode = node} className="video-js vjs-default-skin" data-setup='{"fluid": true}'></video>
               </div>
             </Col>
             <Col md={4}>
@@ -74,22 +74,22 @@ export default class VideoPlayer extends React.Component {
             </Col>
           </Row>
         </Grid>
-      </div>
+      </div >
     )
   }
 }
 
 VideoPlayer.propTypes = {
   autoplay: PropTypes.bool,
-  preload: PropTypes.oneOf(['auto','metadata','none']),
+  preload: PropTypes.oneOf(['auto', 'metadata', 'none']),
   controls: PropTypes.bool,
   loop: PropTypes.bool,
   width: PropTypes.number,
   height: PropTypes.number,
   sources: PropTypes.arrayOf(PropTypes.shape({
-     src: PropTypes.string,
-     type: PropTypes.string,
-   }))
+    src: PropTypes.string,
+    type: PropTypes.string,
+  }))
 };
 
 VideoPlayer.defaultProps = {
@@ -97,7 +97,9 @@ VideoPlayer.defaultProps = {
   preload: "auto",
   controls: true,
   loop: false,
-  sources: [{     src:'https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4',
-    type:'video/mp4'}
+  sources: [{
+    src: 'https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4',
+    type: 'video/mp4'
+  }
   ]
 };
