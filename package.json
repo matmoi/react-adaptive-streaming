@@ -9,7 +9,8 @@
     "react-dom": "^15.5.4",
     "react-json-tree": "^0.10.9",
     "video.js": "^5.19.2",
-    "videojs-contrib-dash": "^2.9.0"
+    "videojs-contrib-dash": "^2.9.0",
+    "videojs-contrib-hls": "^5.5.3"
   },
   "devDependencies": {
     "react-scripts": "1.0.7"

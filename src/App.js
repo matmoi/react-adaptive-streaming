@@ -4,11 +4,7 @@ import Player from './components/VideoPlayer/Player.js'
 class App extends Component {
   render() {
     return (
-      <Player sources={ [{
-        //src:'/media/BigBuckBunny/BigBuckBunny_320x180_av_dash.mpd',
-        src:'/media/ElephantsDream/stream.mpd',
-        type:'application/dash+xml' }
-      ] }/>
+      <Player sources={ [{src:'/media/ElephantsDream/master.m3u8', type:'application/x-mpegURL'}] }/>
     );
   }
 }
