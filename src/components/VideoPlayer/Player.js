@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import videojs from 'video.js'
-import 'video.js/dist/video-js.min.css'
+// import videojs from 'video.js'
+// import 'videojs-contrib-hls'
 import 'videojs-contrib-dash'
+import 'video.js/dist/video-js.min.css'
 import PlayerStream from './PlayerStream.js'
 import PlayerInfo from './PlayerInfo.js'
 import { PageHeader, Col, Row, Grid } from 'react-bootstrap'
@@ -22,7 +23,8 @@ export default class VideoPlayer extends React.Component {
 
   componentDidMount() {
     // instantiate video.js
-    this.player = videojs(this.videoNode, this.props, function onPlayerReady() {
+    // const videojs = window.videojs(this.videoNode, this.props, function onPlayerReady() {
+    this.player = window.videojs(this.videoNode, this.props, function onPlayerReady() {
       this.setState({playerready: true})
       this.player.on('loadedmetadata', () => {
         this.setState({loadedmetadata: true})

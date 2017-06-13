@@ -86,10 +86,16 @@ module.exports = {
     // https://github.com/facebookincubator/create-react-app/issues/290
     extensions: ['.js', '.json', '.jsx'],
     alias: {
-      
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
+      'videojs-contrib-hls': path.join(
+        paths.appNodeModules,
+        'videojs-contrib-hls',
+        'dist',
+        // You can use the unminified version and let the minifier minify!
+        'videojs-contrib-hls.js'
+      ),
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -97,7 +103,10 @@ module.exports = {
       // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
-      new ModuleScopePlugin(paths.appSrc),
+      //new ModuleScopePlugin(paths.appSrc),
+      // new webpack.DefinePlugin({
+      //   'typeof global': JSON.stringify('undefined')
+      // })
     ],
   },
   module: {
@@ -116,7 +125,7 @@ module.exports = {
           {
             options: {
               formatter: eslintFormatter,
-              
+
             },
             loader: require.resolve('eslint-loader'),
           },
@@ -165,7 +174,7 @@ module.exports = {
         include: paths.appSrc,
         loader: require.resolve('babel-loader'),
         options: {
-          
+
           // This is a feature of `babel-loader` for webpack (not Babel itself).
           // It enables caching results in ./node_modules/.cache/babel-loader/
           // directory for faster rebuilds.
@@ -242,6 +251,10 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.ProvidePlugin({
+      videojs: "video.js",
+      "window.videojs": "video.js"
+    }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
