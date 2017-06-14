@@ -23,7 +23,7 @@ First, terminal output shows some useful information, more precisely :
 Movie lasts `10:53.85` in total, hence `653.85s` , video stream is encoded using h264 constrained baseline with an avg bitrate of `696kbps`, a resolution of `640x360` and a framerate of `24fps`. Now let's have a look at `ed_hd.csv`, which contains per frame information. First column indicates if the frame is a key frame, second is the packet presentation timestamp, aka. PTS, and last shows the coded picture counter. The file contains `15691` lines, one per frame, as we can expect `(15691+1)/24 = 653.83` (number of frames + 1 / framerate = stream duration). There are `147` key frames, meaning one every `4.45s` roughly. Maximum time range between two consecutives key frame is `10.416667s`, we can conclude that max gop size was set to 250 (`10.416667 * 24fps`), which is way too much for our purpose. So, we must re-encode our mezzianine video file to serve us better, with a fix gop size of `2s`. This is what's broadly used in the industry, as a good trade-off between coding efficiency and the ability to quickly react depending on network condition changes. We use a two pass encoding as following:
 
 ```
-ffmpeg -y -i ed_hd.mp4 -c:v libx264 -x264-params keyint=48:min-keyint=48:scenecut=-1:nal-hrd=cbr -b:v 600k -bufsize 1200k -maxrate 600k -profile:v high -level 4.2 -pass 1 -an -f mp4 NUL && ffmpeg -i ed_hd.mp4 -c:v libx264 -x264-params keyint=48:min-keyint=48:scenecut=-1:nal-hrd=cbr -b:v 600k -bufsize 1200k -maxrate 600k -profile:v high -level 4.2 -pass 2 -an ed_hd_640x480.mp4
+ffmpeg -y -i ed_hd.mp4 -c:v libx264 -x264-params keyint=48:min-keyint=48:scenecut=-1:nal-hrd=cbr -b:v 600k -bufsize 1200k -maxrate 600k -profile:v high -level 4.2 -pass 1 -an -f mp4 NUL && ffmpeg -i ed_hd.mp4 -c:v libx264 -x264-params keyint=48:min-keyint=48:scenecut=-1:nal-hrd=cbr -b:v 600k -bufsize 1200k -maxrate 600k -profile:v high -level 4.2 -pass 2 -an ed_hd_640x360.mp4
 ```
 
 We specify a gop size of `48` frames (every `2s`) with `keyint=48:min-keyint=48`, no scene cut detection (to avoid unexpected key frames) and constant bitrate mode targetting `600kbps`. As you can see, the target bitrate is slightly lower than for the mezzianine file, this is because we use h264 high profile which provides a much better compression rate than constrained baseline, even if we drastically reduce the gop size it should not impact video quality. We also specify that our HRD model has a max size of twice the bitrate, meaning that each fragment of `2s` cannot exceed the target bitrate.
@@ -81,7 +81,7 @@ As for video tracks, we want fragments of `2s`, specified with `--fragment-durat
 
 ### Generate DASH/HLS compatible streams
 
-```mp4dash --profiles=on-demand --hls -o ElephantsDream ed_hd_640x480.mp4 ed_hd_480x270.mp4 ed_hd_320x180.mp4 ed_hd_english.mp4 ed_hd_french.mp4```
+```mp4dash --profiles=on-demand --hls -o ElephantsDream ed_hd_640x360.mp4 ed_hd_480x270.mp4 ed_hd_320x180.mp4 ed_hd_english_fragments.mp4 ed_hd_french_fragments.mp4```
 
 ## Other examples
 
