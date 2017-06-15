@@ -2,7 +2,7 @@
 
 [ffmpeg](https://www.ffmpeg.org/download.html) is needed to prepare media files for ABR streaming, including `ffprobe` command line tool to display information about media streams.
 [bento4](https://www.bento4.com/downloads/) is also required to structure media bitstreams as expected. 
-## Prepare your media files
+## Prepare media files
 
 As an example, I'll use the film [Elephants Dream](https://orange.blender.org/), which is under Creative Commons license, and more specifically its [mp4 version](http://ia600209.us.archive.org/20/items/ElephantsDream/ed_hd.mp4).
 
@@ -71,7 +71,7 @@ ffmpeg -i ed_hd.mp4 -vn -b:a 24k -c:a aac -metadata:s:a:0 language=fre ed_hd_fre
 If you listen to `ed_hd_french.mp4`, you'll ear indeed how crappy it sounds. This low quality audio file, as well as the original version, can now be fragmented as required by ABR streaming using :
 
 ```
-mp4fragment --fragment-duration 2000 ed_hd_fench.mp4 ed_hd_fench_fragments.mp4
+mp4fragment --fragment-duration 2000 ed_hd_french.mp4 ed_hd_french_fragments.mp4
 mp4fragment --fragment-duration 2000 ed_hd_english.mp4 ed_hd_english_fragments.mp4
 ```
 
@@ -79,7 +79,7 @@ As for video tracks, we want fragments of `2s`, specified with `--fragment-durat
 
 ### Subtitles
 
-### Generate DASH/HLS compatible streams
+### Generate DASH/HLS files for streaming
 
 ```mp4dash --profiles=on-demand --hls -o ElephantsDream ed_hd_640x360.mp4 ed_hd_480x270.mp4 ed_hd_320x180.mp4 ed_hd_english_fragments.mp4 ed_hd_french_fragments.mp4```
 
