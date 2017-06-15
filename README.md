@@ -79,6 +79,9 @@ As for video tracks, we want fragments of `2s`, specified with `--fragment-durat
 
 ### Subtitles
 
+https://github.com/gpac/gpac/raw/master/tests/media/webvtt/elephants-dream-subtitles-en.vtt
+https://github.com/gpac/gpac/raw/master/tests/media/webvtt/elephants-dream-subtitles-de.vtt
+
 ### Generate DASH/HLS files for streaming
 
 ```mp4dash --profiles=on-demand --hls -o ElephantsDream ed_hd_640x360_fragments.mp4 ed_hd_480x270_fragments.mp4 ed_hd_320x180_fragments.mp4 ed_hd_english_fragments.mp4 ed_hd_french_fragments.mp4```
