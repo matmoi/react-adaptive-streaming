@@ -83,13 +83,16 @@ As for video tracks, we want fragments of `2s`, specified with `--fragment-durat
 https://github.com/gpac/gpac/raw/master/tests/media/webvtt/elephants-dream-subtitles-en.vtt
 https://github.com/gpac/gpac/raw/master/tests/media/webvtt/elephants-dream-subtitles-de.vtt
 
+> Both subtitle files have unsupported features on line 24, you should manually remove `line:6% size:110%` otherwise subtitles will stop working after this moment.
+
 ## Generate DASH/HLS files for streaming
 
-```mp4dash --profiles=on-demand --hls -o ElephantsDream ed_hd_640x360_fragments.mp4 ed_hd_480x270_fragments.mp4 ed_hd_320x180_fragments.mp4 ed_hd_english_fragments.mp4 ed_hd_french_fragments.mp4```
+```mp4dash --verbose --profiles=on-demand --hls --subtitles -o ElephantsDream ed_hd_640x360_fragments.mp4 ed_hd_480x270_fragments.mp4 ed_hd_320x180_fragments.mp4 ed_hd_english_fragments.mp4 ed_hd_french_fragments.mp4```
 
 ## Other examples
 
 [Bitmovin](https://bitmovin.com/mpeg-dash-hls-examples-sample-streams/) provides a bunch of samples for DASH and HLS.
+https://bitmovin.com/mpeg-dash-hls-examples-sample-streams/
 [Akamai](http://players.akamai.com) also proposes several DASH and HLS streams.
 
 # In-browser visualization
