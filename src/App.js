@@ -4,10 +4,12 @@ import Player from './components/VideoPlayer/Player.js'
 class App extends Component {
   render() {
     return (
-      <Player sources={ [{
-        src:'/media/ElephantsDream/stream.mpd',
-        type:'application/dash+xml' }
-      ] }/>
+      <Player
+        sources={ [{
+          src:'/media/ElephantsDream/stream.mpd',
+          type:'application/dash+xml' }
+        ] }
+      />
     );
   }
 }

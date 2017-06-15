@@ -1,12 +1,13 @@
+# Prepare media files
+
+To illustrate with an example, I'll use the film [Elephants Dream](https://orange.blender.org/), which is under Creative Commons license, and more specifically this [mp4 version](http://ia600209.us.archive.org/20/items/ElephantsDream/ed_hd.mp4).
+
 ## Requirements
 
 [ffmpeg](https://www.ffmpeg.org/download.html) is needed to prepare media files for ABR streaming, including `ffprobe` command line tool to display information about media streams.
 [bento4](https://www.bento4.com/downloads/) is also required to structure media bitstreams as expected. 
-## Prepare media files
 
-As an example, I'll use the film [Elephants Dream](https://orange.blender.org/), which is under Creative Commons license, and more specifically its [mp4 version](http://ia600209.us.archive.org/20/items/ElephantsDream/ed_hd.mp4).
-
-### Video streams
+## Video streams
 The video track of `ed_hd.mp4` is gonna be my mezzanine media file, let's have a look at the bitstream structure using `ffprobe` :
 
 ```
@@ -48,7 +49,7 @@ mp4fragment ed_hd_480x270.mp4 ed_hd_480x270_fragments.mp4
 mp4fragment ed_hd_640x360.mp4 ed_hd_640x360_fragments.mp4
 ```
 
-### Audio streams
+## Audio streams
 
 Source file `ed_hd.mp4` contains the original audio track aleady. Let's have a look at it :
 
@@ -77,12 +78,12 @@ mp4fragment --fragment-duration 2000 ed_hd_english.mp4 ed_hd_english_fragments.m
 
 As for video tracks, we want fragments of `2s`, specified with `--fragment-duration 2000`.
 
-### Subtitles
+## Subtitles
 
 https://github.com/gpac/gpac/raw/master/tests/media/webvtt/elephants-dream-subtitles-en.vtt
 https://github.com/gpac/gpac/raw/master/tests/media/webvtt/elephants-dream-subtitles-de.vtt
 
-### Generate DASH/HLS files for streaming
+## Generate DASH/HLS files for streaming
 
 ```mp4dash --profiles=on-demand --hls -o ElephantsDream ed_hd_640x360_fragments.mp4 ed_hd_480x270_fragments.mp4 ed_hd_320x180_fragments.mp4 ed_hd_english_fragments.mp4 ed_hd_french_fragments.mp4```
 
@@ -90,3 +91,8 @@ https://github.com/gpac/gpac/raw/master/tests/media/webvtt/elephants-dream-subti
 
 [Bitmovin](https://bitmovin.com/mpeg-dash-hls-examples-sample-streams/) provides a bunch of samples for DASH and HLS.
 [Akamai](http://players.akamai.com) also proposes several DASH and HLS streams.
+
+# In-browser visualization
+
+> for Windows 10 users :
+> I strongly recommend to run npm/nodejs from the [Bash](https://msdn.microsoft.com/en-us/commandline/wsl/about) environment instead of Windows batch, it makes the installation process much less painful !
