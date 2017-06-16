@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import JSONTree from 'react-json-tree'
-import { Panel, Button } from 'react-bootstrap'
+import { Panel, Button, ButtonGroup } from 'react-bootstrap'
 
 export default class DropdownPanel extends React.Component {
 
@@ -15,8 +15,8 @@ export default class DropdownPanel extends React.Component {
     render() {
         const { title, data } = this.props
         return (
-            <div>
-                <Button onClick={() => this.setState({ open: !this.state.open })} bsStyle="primary">{ title} </Button>
+            <ButtonGroup vertical block>
+                <Button onClick={() => this.setState({ open: !this.state.open })} bsStyle="primary">{title} </Button>
                 {data &&
                     <Panel collapsible expanded={this.state.open} bsClass="custom-panel">
                         <JSONTree hideRoot={true} data={{
@@ -24,7 +24,7 @@ export default class DropdownPanel extends React.Component {
                         }} />
                     </Panel>
                 }
-            </div>
+            </ButtonGroup>
         )
     }
 }
