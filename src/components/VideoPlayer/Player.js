@@ -95,7 +95,8 @@ VideoPlayer.defaultProps = {
   preload: "auto",
   controls: true,
   loop: false,
-  sources: [{     src:'https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4',
+  sources: [{
+    src:'https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4',
     type:'video/mp4'}
   ]
 };

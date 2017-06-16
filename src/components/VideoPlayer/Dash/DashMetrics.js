@@ -1,17 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import JSONTree from 'react-json-tree'
 import dashjs from 'dashjs'
-import { Panel, Button } from 'react-bootstrap'
+import DropdownPanel from '../../utils/DropdownPanel.js'
 
 export default class DashMetrics extends React.Component {
-
-    constructor(...args) {
-        super(...args)
-        this.state = {
-            open: true
-        }
-    }
 
     componentDidMount(){
         const { mediaPlayer } = this.props
@@ -24,16 +16,7 @@ export default class DashMetrics extends React.Component {
         const { mediaPlayer, type } = this.props
         const metrics = mediaPlayer.getMetricsFor(type)
         return (
-            <div>
-                <Button onClick={ ()=> this.setState({ open: !this.state.open })} bsStyle="primary">Dash {type} metrics</Button>
-                {metrics &&
-                    <Panel collapsible expanded={this.state.open} bsClass="custom-panel">
-                        <JSONTree hideRoot={ true } data={ {
-                        ...metrics
-                        } } />
-                    </Panel>
-                }
-            </div>
+            <DropdownPanel title={ `Dash ${type} metrics` } data={metrics}/>
         )
     }
 }

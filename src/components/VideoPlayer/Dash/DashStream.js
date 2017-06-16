@@ -3,17 +3,10 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import JSONTree from 'react-json-tree'
-import { Panel, Button } from 'react-bootstrap'
+import DropdownPanel from '../../utils/DropdownPanel.js'
+
 
 export default class DashStream extends React.Component {
-
-    constructor(...args) {
-        super(...args)
-        this.state = {
-            open: true
-        }
-    }
 
     getStreamInfoFor = (mediaPlayer,type) => {
         return {
@@ -31,10 +24,7 @@ export default class DashStream extends React.Component {
     render() {
         const { mediaPlayer } = this.props
         return (
-            <div>
-                <Button onClick={ ()=> this.setState({ open: !this.state.open })} bsStyle="primary">Dash Stream</Button>
-                <Panel collapsible expanded={this.state.open} bsClass="custom-panel">
-                    <JSONTree hideRoot={ true } data={ {
+            <DropdownPanel title={ "Dash Stream" } data={{
                     version: mediaPlayer.getVersion(),
                     source: mediaPlayer.getSource(),
                     duration: mediaPlayer.duration(),
@@ -42,9 +32,7 @@ export default class DashStream extends React.Component {
                     fastSwitchEnabled: mediaPlayer.getFastSwitchEnabled(),
                     video: this.getStreamInfoFor(mediaPlayer,'video'),
                     audio: this.getStreamInfoFor(mediaPlayer,'audio')
-                } } />
-                </Panel>
-            </div>
+            }}/>
         )
     }
 }
