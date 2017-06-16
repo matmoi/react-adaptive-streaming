@@ -79,7 +79,7 @@ VideojsPlayer.propTypes = {
     src: PropTypes.string,
     type: PropTypes.string,
   }))
-};
+}
 
 VideojsPlayer.defaultProps = {
   autoplay: true,
@@ -91,4 +91,4 @@ VideojsPlayer.defaultProps = {
     type: 'video/mp4'
   }
   ]
-};
+}

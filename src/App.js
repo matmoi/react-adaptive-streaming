@@ -6,6 +6,10 @@ import FontAwesome from 'react-fontawesome'
 
 export default class App extends Component {
 
+  loadSrc(source) {
+    console.log(source)
+  }
+
   render() {
     return (
       <div>
@@ -17,7 +21,7 @@ export default class App extends Component {
         <Grid fluid={true}>
           <Row className="show-grid">
             <Col md={12}>
-              <SourceSelector />
+              <SourceSelector onSubmit={this.loadSrc}/>
             </Col>
           </Row>
           <VideojsPlayer
@@ -27,7 +31,6 @@ export default class App extends Component {
             }
             ]}
           />
-          }
         </Grid>
         <Navbar className="fixedBottom">
           <Navbar.Header>
