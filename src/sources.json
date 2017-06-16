@@ -1,0 +1,8 @@
+{
+    "sources": [
+        {
+            "src": "/media/ElephantsDream/stream.mpd",
+            "type": "application/dash+xml"
+        }
+    ]
+}

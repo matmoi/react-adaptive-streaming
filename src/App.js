@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
+import SourceSelector from './components/utils/SourceSelector.js'
 import VideojsPlayer from './components/VideoPlayer/Videojs/Player.js'
 import { Nav, Navbar, NavItem, PageHeader, Col, Row, Grid } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 
 export default class App extends Component {
+
   render() {
     return (
       <div>
@@ -15,16 +17,17 @@ export default class App extends Component {
         <Grid fluid={true}>
           <Row className="show-grid">
             <Col md={12}>
-              Pick up a stream
+              <SourceSelector />
             </Col>
           </Row>
           <VideojsPlayer
             sources={[{
-              src: '/media/ElephantsDream/stream.mpd',
-              type: 'application/dash+xml'
+              src: "/media/ElephantsDream/stream.mpd",
+              type: "application/dash+xml"
             }
             ]}
           />
+          }
         </Grid>
         <Navbar className="fixedBottom">
           <Navbar.Header>
