@@ -1,5 +1,3 @@
-import Info from './Info.js'
+import DashInfo from './Info.js'
 
-module.exports = {
-  Info
-}
+export default DashInfo

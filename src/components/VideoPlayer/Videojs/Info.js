@@ -4,7 +4,7 @@ import JSONTree from 'react-json-tree'
 import videojs from 'video.js'
 import { OverlayTrigger, Button, Popover } from 'react-bootstrap'
 
-export default class PlayerInfo extends React.Component {
+export default class VideojsInfo extends React.Component {
 
     render() {
         const { player, playerready } = this.props
@@ -34,12 +34,12 @@ export default class PlayerInfo extends React.Component {
     }
 }
 
-PlayerInfo.propTypes = {
+VideojsInfo.propTypes = {
     player: PropTypes.object,
     playerready: PropTypes.bool
 };
 
-PlayerInfo.defaultProps = {
+VideojsInfo.defaultProps = {
     player: null,
     playerready: false
 }

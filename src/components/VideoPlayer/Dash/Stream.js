@@ -25,7 +25,6 @@ export default class DashStream extends React.Component {
         const { mediaPlayer } = this.props
         return (
             <DropdownPanel title={ "Dash Stream" } data={{
-                    version: mediaPlayer.getVersion(),
                     source: mediaPlayer.getSource(),
                     duration: mediaPlayer.duration(),
                     selectionModeForInitialTrack: mediaPlayer.getSelectionModeForInitialTrack(),

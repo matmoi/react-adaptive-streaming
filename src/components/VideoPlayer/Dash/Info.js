@@ -1,26 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import DashStream from './DashStream.js'
-import DashTrack from './DashTrack.js'
-import DashMetrics from './DashMetrics.js'
+import DashStream from './Stream.js'
+import DashTrack from './Track.js'
+import DashMetrics from './Metrics.js'
 
-export default class Info extends React.Component {
+export default class DashInfo extends React.Component {
 
     render() {
-        const { player } = this.props
+        const { mediaPlayer } = this.props
         return (
             <div>
-                dashjs <code> { player.dash.mediaPlayer.getVersion() } </code>
-                <DashStream mediaPlayer={ player.dash.mediaPlayer } />
-                <DashTrack type='video' mediaPlayer={ player.dash.mediaPlayer } />
-                <DashTrack type='audio' mediaPlayer={ player.dash.mediaPlayer } />
-                <DashMetrics type='video' mediaPlayer={ player.dash.mediaPlayer } />
-                <DashMetrics type='audio' mediaPlayer={ player.dash.mediaPlayer } />
+                dashjs <code> { mediaPlayer.getVersion() } </code>
+                <DashStream mediaPlayer={ mediaPlayer } />
+                <DashTrack type='video' mediaPlayer={ mediaPlayer } />
+                <DashTrack type='audio' mediaPlayer={ mediaPlayer } />
+                <DashMetrics type='video' mediaPlayer={ mediaPlayer } />
+                <DashMetrics type='audio' mediaPlayer={ mediaPlayer } />
             </div>
         )
     }
 }
 
-Info.propTypes = {
-    player: PropTypes.object.isRequired
+DashInfo.propTypes = {
+    mediaPlayer: PropTypes.object.isRequired
 };
