@@ -31,7 +31,7 @@ export default class DropdownPanel extends React.Component {
 
 DropdownPanel.propTypes = {
     data: PropTypes.object,
-    type: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired
 };
 
 DropdownPanel.defaultProps = {
