@@ -4,9 +4,12 @@ import DropdownPanel from '../../utils/DropdownPanel.js'
 
 export default class PlayerStream extends React.Component {
 
+    shouldComponentUpdate(newProps,newState) {
+        return (newProps.loadedmetadata && newProps.player)
+    }
     render() {
-        const { player, loadedmetadata } = this.props
-        if (loadedmetadata) {
+        const { player } = this.props
+        if (player) {
             return (
                 <DropdownPanel title={"Stream"} data={{
                     src: player.currentSource().src,
@@ -20,11 +23,9 @@ export default class PlayerStream extends React.Component {
                 } />
             )
         }
-        return (
-            <div>
-                "Loading..."
-            </div>
-        )
+        else {
+            return (<div></div>)
+        }
     }
 }
 
