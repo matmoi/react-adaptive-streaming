@@ -27,22 +27,19 @@ export default class SourceSelector extends Component {
         // )
 
         return (
-            <Navbar fluid={true}>
+            <Navbar fluid style={{width:"100%"}}>
                 <Navbar.Header>
                     <Navbar.Brand>
                         Select stream
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>
-                <Nav>
-                    <NavDropdown title={this.sources[this.state.sourceIdx].src} id="source-selector-dropdown">
+                <Nav style={{width:"80%"}}>
+                    <NavDropdown pullRight style={{width:"80%", textAlign: "right"}} title={this.sources[this.state.sourceIdx].src} id="source-selector-dropdown">
                         { listSources }
                     </NavDropdown>
                     <NavItem disabled><i>{this.sources[this.state.sourceIdx].type}</i></NavItem>
-                    
-                </Nav>
-                <Nav pullRight>
-                    <NavItem onSelect={this.props.onSubmit.bind(null,this.sources[this.state.sourceIdx])}>Submit</NavItem>
+                    <NavItem style={{textAlign: "right"}} onSelect={this.props.onSubmit.bind(null,this.sources[this.state.sourceIdx])}>Submit</NavItem>
                 </Nav>
 
             </Navbar>
