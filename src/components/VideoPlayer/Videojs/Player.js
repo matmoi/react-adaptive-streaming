@@ -39,6 +39,19 @@ export default class VideojsPlayer extends React.Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    // Do we need to change videojs player source ?
+    if (this.player && nextProps.sources.length > 0) {
+      for(let i = 0;i < nextProps.sources.length; i++) {
+        if (!this.props.sources[i] || nextProps.sources[i].src !== this.props.sources[i].src || nextProps.sources[i].type !== this.props.sources[i].type) {
+          this.player.src({src:nextProps.sources[0].src,type:nextProps.sources[0].type})
+          break
+        }
+      }
+    }
+    return true
+  }
+
   // wrap the player in a div with a `data-vjs-player` attribute
   // so videojs won't create additional wrapper in the DOM
   // see https://github.com/videojs/video.js/pull/3856

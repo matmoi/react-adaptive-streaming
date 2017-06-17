@@ -35,7 +35,7 @@ export default class SourceSelector extends Component {
                     <Navbar.Toggle />
                 </Navbar.Header>
                 <Nav>
-                    <NavDropdown title={this.sources[this.state.sourceIdx].src}>
+                    <NavDropdown title={this.sources[this.state.sourceIdx].src} id="source-selector-dropdown">
                         { listSources }
                     </NavDropdown>
                     <NavItem disabled><i>{this.sources[this.state.sourceIdx].type}</i></NavItem>

@@ -6,8 +6,15 @@ import FontAwesome from 'react-fontawesome'
 
 export default class App extends Component {
 
+    constructor(...args) {
+        super(...args)
+        this.state = {
+            sources: []
+        }
+    }
+
   loadSrc(source) {
-    console.log(source)
+    this.setState({sources:[source]})
   }
 
   render() {
@@ -21,15 +28,11 @@ export default class App extends Component {
         <Grid fluid={true}>
           <Row className="show-grid">
             <Col md={12}>
-              <SourceSelector onSubmit={this.loadSrc}/>
+              <SourceSelector onSubmit={this.loadSrc.bind(this)}/>
             </Col>
           </Row>
           <VideojsPlayer
-            sources={[{
-              src: "/media/ElephantsDream/stream.mpd",
-              type: "application/dash+xml"
-            }
-            ]}
+            sources={this.state.sources}
           />
         </Grid>
         <Navbar className="fixedBottom">
@@ -39,7 +42,7 @@ export default class App extends Component {
             </Navbar.Brand>
           </Navbar.Header>
           <Nav>
-            <NavItem href="https://github.com/matmoi/react-adaptive-streaming"><FontAwesome name='github' />Github</NavItem>
+            <NavItem href="https://github.com/matmoi/react-adaptive-streaming"><FontAwesome name='github'/>{' Github'}</NavItem>
             <NavItem href="https://github.com/matmoi/create-DASH-HLS">Help: generate dash/hls files</NavItem>
           </Nav>
         </Navbar>
