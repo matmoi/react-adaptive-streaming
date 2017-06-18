@@ -14,6 +14,12 @@ export default class SourceSelector extends Component {
         }
     }
 
+    componentDidMount() {
+        if (this.state.sourceIdx < this.sources.length) {
+            this.props.onSubmit(this.sources[this.state.sourceIdx])
+        }
+    }
+
     render() {
         // const { supportedTypes } = this.props
         const listSources = this.sources.map((item, idx) =>
