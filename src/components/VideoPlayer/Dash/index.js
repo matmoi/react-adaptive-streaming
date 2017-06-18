@@ -1,3 +1,3 @@
 import DashInfo from './Info.js'
-
-export default DashInfo
+import DashPlayer from './Player.js'
+export default { DashInfo, DashPlayer }

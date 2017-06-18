@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import SourceSelector from './components/utils/SourceSelector.js'
 import VideojsPlayer from './components/VideoPlayer/Videojs/Player.js'
+import DashPlayer from './components/VideoPlayer/Dash/Player.js'
 import { Nav, Navbar, NavItem, PageHeader, Col, Row, Grid } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 
@@ -31,9 +32,10 @@ export default class App extends Component {
               <SourceSelector onSubmit={this.loadSrc.bind(this)}/>
             </Col>
           </Row>
-          <VideojsPlayer
+          <DashPlayer sources={this.state.sources} />
+          {/*<VideojsPlayer
             sources={this.state.sources}
-          />
+          />*/}
         </Grid>
         <Navbar className="fixedBottom">
           <Navbar.Header>
@@ -43,7 +45,7 @@ export default class App extends Component {
           </Navbar.Header>
           <Nav>
             <NavItem href="https://github.com/matmoi/react-adaptive-streaming"><FontAwesome name='github'/>{' Github'}</NavItem>
-            <NavItem href="https://github.com/matmoi/create-DASH-HLS">Help: generate dash/hls files</NavItem>
+            <NavItem href="https://github.com/matmoi/create-DASH-HLS">How-to: generate dash/hls streams</NavItem>
           </Nav>
         </Navbar>
       </div>

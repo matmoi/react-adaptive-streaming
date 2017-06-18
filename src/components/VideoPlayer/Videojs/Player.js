@@ -70,7 +70,7 @@ export default class VideojsPlayer extends React.Component {
         </Col>
         <Col md={6}>
           <div data-vjs-player className="player">
-            <video ref={node => this.videoNode = node} className="video-js vjs-default-skin" data-setup='{"fluid": true}'></video>
+            <video ref={node => this.videoNode = node} className="video-js vjs-default-skin" data-setup='{"fluid": true}' />
           </div>
         </Col>
         <Col md={1}>
