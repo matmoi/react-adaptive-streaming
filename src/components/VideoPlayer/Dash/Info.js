@@ -15,6 +15,7 @@ export default class DashInfo extends React.Component {
                     <DashStream mediaPlayer={ mediaPlayer } />
                     <DashTrack type='video' mediaPlayer={ mediaPlayer } />
                     <DashTrack type='audio' mediaPlayer={ mediaPlayer } />
+                    <DashTrack type='text' mediaPlayer={ mediaPlayer } />
                     <DashMetrics type='video' mediaPlayer={ mediaPlayer } />
                     <DashMetrics type='audio' mediaPlayer={ mediaPlayer } />
                 </div>

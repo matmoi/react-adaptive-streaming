@@ -30,7 +30,8 @@ export default class DashStream extends React.Component {
                 selectionModeForInitialTrack: mediaPlayer.getSelectionModeForInitialTrack(),
                 fastSwitchEnabled: mediaPlayer.getFastSwitchEnabled(),
                 video: this.getStreamInfoFor(mediaPlayer, 'video'),
-                audio: this.getStreamInfoFor(mediaPlayer, 'audio')
+                audio: this.getStreamInfoFor(mediaPlayer, 'audio'),
+                text: mediaPlayer.getTracksFor("text")
             }} />
         )
     }

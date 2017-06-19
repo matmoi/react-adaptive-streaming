@@ -22,7 +22,7 @@ export default class DashTrack extends React.Component {
             if (qualityIndex !== null) {
                 return (
                     <div>
-                        <DropdownPanel title={`Dash ${type} track`} data={{
+                        <DropdownPanel title={`${type} track`} data={{
                                 qualityIndex: qualityIndex,
                                 bandwidth: track.bitrateList[qualityIndex].bandwidth,
                                 width: track.bitrateList[qualityIndex].width,
@@ -35,13 +35,13 @@ export default class DashTrack extends React.Component {
                 )
             }
         }
-        return (<div>{`Loading dash ${type} track`}</div>)
+        return (<div>{`Loading ${type} track`}</div>)
     }
 }
 
 DashTrack.propTypes = {
     mediaPlayer: PropTypes.object.isRequired,
-    type: PropTypes.oneOf(['audio', 'video', 'subtitle'])
+    type: PropTypes.oneOf(['audio', 'video', 'text'])
 };
 
 DashTrack.defaultProps = {

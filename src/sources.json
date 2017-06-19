@@ -1,12 +1,12 @@
 {
     "sources": [
         {
-            "src": "/media/ElephantsDream/master.m3u8",
-            "type": "application/x-mpegURL"
-        },
-        {
             "src": "/media/ElephantsDream/stream.mpd",
             "type": "application/dash+xml"
+        },
+        {
+            "src": "/media/ElephantsDream/master.m3u8",
+            "type": "application/x-mpegURL"
         },
         {
             "src": "http://dash.akamaized.net/dash264/TestCases/4b/qualcomm/1/ED_OnDemand_5SecSeg_Subtitles.mpd",
