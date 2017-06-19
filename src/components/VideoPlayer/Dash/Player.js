@@ -55,7 +55,7 @@ export default class DashPlayer extends React.Component {
             <DashInfo mediaPlayer={this.mediaPlayer} />}
         </Col>
         <Col md={6}>
-            <video ref={node => this.videoNode = node} style={{width:"100%"}}/>
+            <video data-dashjs-player autoplay controls ref={node => this.videoNode = node} style={{width:"100%"}} />
         </Col>
         <Col md={1}>
         </Col>
