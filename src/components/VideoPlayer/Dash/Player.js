@@ -16,27 +16,27 @@ export default class DashPlayer extends React.Component {
 
 
   componentDidMount() {
-    this.mediaPlayer= dashjs.MediaPlayer().create();
+    this.mediaPlayer =  dashjs.MediaPlayer().create();
     this.mediaPlayer.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
-        this.setState({ loadedmetadata: true })
+      this.setState({ loadedmetadata: true })
     });
     this.mediaPlayer.initialize(this.videoNode, this.props.sources.length > 0 ? this.props.sources[0].src : null, this.props.autoplay)
   }
 
   componentWillUnmount() {
     if (this.mediaPlayer) {
-        this.mediaPlayer.reset()
-        this.mediaPlayer = null
+      this.mediaPlayer.reset()
+      this.mediaPlayer = null
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     // Do we need to change videojs player source ?
     if (this.mediaPlayer && nextProps.sources.length > 0) {
-      for(let i = 0;i < nextProps.sources.length; i++) {
+      for (let i = 0; i < nextProps.sources.length; i++) {
         if (!this.props.sources[i] || nextProps.sources[i].src !== this.props.sources[i].src) {
-            this.mediaPlayer.attachSource(nextProps.sources[0].src)
-            break
+          this.mediaPlayer.attachSource(nextProps.sources[0].src)
+          break
         }
       }
     }
@@ -50,12 +50,16 @@ export default class DashPlayer extends React.Component {
     return (
       <Row>
         <Col md={4}>
-            <DashInfo mediaPlayer={this.mediaPlayer} />}
+          <DashInfo mediaPlayer={this.mediaPlayer} />}
         </Col>
         <Col md={6}>
-            <video data-dashjs-player autoPlay controls ref={node => this.videoNode = node} style={{width:"100%"}} />
+          <video data-dashjs-player autoPlay controls ref={node => this.videoNode = node} style={{ width: "100%" }} />
+          <div>
+            <code>Timeseries (TBD)</code>
+          </div>
         </Col>
         <Col md={1}>
+          <code>Overall metrics (TBD)</code>
         </Col>
       </Row>
     )

@@ -16,7 +16,11 @@ export default class DropdownPanel extends React.Component {
         const { title, data } = this.props
         return (
             <ButtonGroup vertical block>
-                <Button onClick={() => this.setState({ open: !this.state.open })} bsStyle="primary">{title} </Button>
+                {data ?
+                    <Button onClick={() => this.setState({ open: !this.state.open })} bsStyle="primary">{title}</Button>
+                    :
+                    <Button disabled bsStyle="primary">{title}</Button>
+                }
                 {data &&
                     <Panel collapsible expanded={this.state.open} bsClass="custom-panel">
                         <JSONTree hideRoot={true} data={{

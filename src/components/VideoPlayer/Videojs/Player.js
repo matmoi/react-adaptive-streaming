@@ -5,7 +5,7 @@ import 'videojs-contrib-dash'
 import 'video.js/dist/video-js.min.css'
 import Mp4Stream from '../MP4/Stream.js'
 import VideojsInfo from './Info.js'
-import DashInfo from '../Dash'
+import DashInfo from '../Dash/Info.js'
 
 import { Col, Row } from 'react-bootstrap'
 
@@ -72,9 +72,13 @@ export default class VideojsPlayer extends React.Component {
           <div data-vjs-player className="player">
             <video ref={node => this.videoNode = node} className="video-js vjs-default-skin" data-setup='{"fluid": true}' />
           </div>
+          <div>
+            <code>Timeseries (TBD)</code>
+          </div>
         </Col>
         <Col md={1}>
           <VideojsInfo player={this.player} playerready={this.state.playerready} />
+          <code>Overall metrics (TBD)</code>
         </Col>
       </Row>
     )

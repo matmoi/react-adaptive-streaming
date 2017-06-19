@@ -41,7 +41,7 @@ export default class DashTrack extends React.Component {
 
 DashTrack.propTypes = {
     mediaPlayer: PropTypes.object.isRequired,
-    type: PropTypes.string
+    type: PropTypes.oneOf(['audio', 'video', 'subtitle'])
 };
 
 DashTrack.defaultProps = {

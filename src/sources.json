@@ -1,6 +1,10 @@
 {
     "sources": [
         {
+            "src": "/media/ElephantsDream/master.m3u8",
+            "type": "application/x-mpegURL"
+        },
+        {
             "src": "/media/ElephantsDream/stream.mpd",
             "type": "application/dash+xml"
         },

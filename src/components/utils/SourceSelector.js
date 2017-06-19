@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { NavItem, Nav, NavDropdown, Navbar, MenuItem } from 'react-bootstrap'
+import { Checkbox, NavItem, Nav, NavDropdown, Navbar, MenuItem } from 'react-bootstrap'
 import Sources from '../../sources.json'
 
 export default class SourceSelector extends Component {
@@ -10,7 +10,8 @@ export default class SourceSelector extends Component {
         this.sources = Sources.sources
         this.state = {
             open: false,
-            sourceIdx: 0
+            sourceIdx: 0,
+            useVideojs: false
         }
     }
 
@@ -23,7 +24,7 @@ export default class SourceSelector extends Component {
     render() {
         // const { supportedTypes } = this.props
         const listSources = this.sources.map((item, idx) =>
-            <MenuItem key={idx} eventKey={ idx } active={idx === this.state.sourceIdx} onClick={() => this.setState({sourceIdx:idx})}>
+            <MenuItem key={idx} eventKey={idx} active={idx === this.state.sourceIdx} onClick={() => this.setState({ sourceIdx: idx })}>
                 {item.src} {' '} <small><i>{item.type}</i></small>
             </MenuItem>
         )
@@ -33,21 +34,21 @@ export default class SourceSelector extends Component {
         // )
 
         return (
-            <Navbar fluid style={{width:"100%"}}>
+            <Navbar fluid style={{ width: "100%" }}>
                 <Navbar.Header>
                     <Navbar.Brand>
                         Select stream
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>
-                <Nav style={{width:"80%"}}>
-                    <NavDropdown pullRight style={{width:"80%", textAlign: "right"}} title={this.sources[this.state.sourceIdx].src} id="source-selector-dropdown">
-                        { listSources }
+                <Nav style={{ width: "80%" }}>
+                    <NavDropdown pullRight style={{ width: "70%", textAlign: "right" }} title={this.sources[this.state.sourceIdx].src} id="source-selector-dropdown">
+                        {listSources}
                     </NavDropdown>
                     <NavItem disabled><i>{this.sources[this.state.sourceIdx].type}</i></NavItem>
-                    <NavItem style={{textAlign: "right"}} onSelect={this.props.onSubmit.bind(null,this.sources[this.state.sourceIdx])}>Submit</NavItem>
+                    <NavItem style={{ textAlign: "right" }} onSelect={this.props.onSubmit.bind(null, this.sources[this.state.sourceIdx], this.state.useVideojs)}>Submit</NavItem>
                 </Nav>
-
+                <Checkbox style={{ textAlign: "right" }} checked={this.state.useVideojs} onChange={() => this.setState({ useVideojs: !this.state.useVideojs })}>Videojs</Checkbox>
             </Navbar>
         )
     }
