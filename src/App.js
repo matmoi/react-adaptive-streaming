@@ -3,7 +3,7 @@ import SourceSelector from './components/utils/SourceSelector.js'
 import VideojsPlayer from './components/VideoPlayer/Videojs/Player.js'
 import DashPlayer from './components/VideoPlayer/Dash/Player.js'
 import HLSPlayer from './components/VideoPlayer/HLS/Player.js'
-import { Nav, Navbar, NavItem, PageHeader, Col, Row, Grid } from 'react-bootstrap'
+import { Nav, Navbar, NavItem, PageHeader, Grid } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome'
 
 export default class App extends Component {

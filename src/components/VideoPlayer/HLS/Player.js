@@ -9,18 +9,15 @@ export default class HLSPlayer extends React.Component {
     constructor(props) {
         super(props)
         this.mediaPlayer = null
-        this.state = {
-            loadedmetadata: false
-        }
     }
 
 
     componentDidMount() {
-        this.mediaPlayer = new Hls();
-        this.mediaPlayer.on(Hls.Events.MANIFEST_LOADED, () => {
-            this.setState({ loadedmetadata: true })
-        })
+        this.mediaPlayer = new Hls()
         this.mediaPlayer.attachMedia(this.videoNode)
+        this.mediaPlayer.on(Hls.Events.MANIFEST_LOADED, () => {
+            this.forceUpdate()
+        })
         if (this.props.sources.length > 0) {
             this.mediaPlayer.loadSource(this.props.sources[0].src)
         }
@@ -28,22 +25,27 @@ export default class HLSPlayer extends React.Component {
 
     componentWillUnmount() {
         if (this.mediaPlayer) {
-            this.mediaPlayer.detachMedia()
+            this.mediaPlayer.destroy()
             this.mediaPlayer = null
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    componentWillUpdate(nextProps, nextState) {
         // Do we need to change videojs player source ?
         if (this.mediaPlayer && nextProps.sources.length > 0) {
             for (let i = 0; i < nextProps.sources.length; i++) {
                 if (!this.props.sources[i] || nextProps.sources[i].src !== this.props.sources[i].src) {
+                    this.mediaPlayer.destroy()
+                    this.mediaPlayer = new Hls()
+                    this.mediaPlayer.attachMedia(this.videoNode)
+                    this.mediaPlayer.on(Hls.Events.MANIFEST_LOADED, () => {
+                        this.forceUpdate()
+                    })
                     this.mediaPlayer.loadSource(nextProps.sources[0].src)
                     break
                 }
             }
         }
-        return true
     }
 
     // wrap the player in a div with a `data-vjs-player` attribute
@@ -54,7 +56,7 @@ export default class HLSPlayer extends React.Component {
             <Row>
                 <Col md={4}>
                     <HLSInfo mediaPlayer={this.mediaPlayer} />
-        </Col>
+                </Col>
                 <Col md={6}>
                     <video autoPlay controls ref={node => this.videoNode = node} style={{ width: "100%" }} />
                     <div>

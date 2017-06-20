@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { InputGroup, Row, Col, ButtonGroup, DropdownButton, Button, Form, FormGroup, FormControl, ControlLabel, Checkbox, MenuItem } from 'react-bootstrap'
+import { InputGroup, Row, Col, DropdownButton, Button, FormGroup, FormControl, Checkbox, MenuItem } from 'react-bootstrap'
 import Sources from '../../sources.json'
 
 export default class SourceSelector extends Component {
@@ -25,10 +25,6 @@ export default class SourceSelector extends Component {
         }
     }
 
-    submitNewSource() {
-        this.props.onSubmit(this.state.source,this.state.type, this.state.useVideojs)
-    }
-
     render() {
         const { supportedTypes } = this.props
         const listSources = this.sources.map((item, idx) =>
@@ -40,7 +36,6 @@ export default class SourceSelector extends Component {
         return (
             <Row className="show-grid">
                 <Col md={1}>
-                    Stream url:
                 </Col>
                 <Col md={7}>
                 <FormGroup>
@@ -63,7 +58,7 @@ export default class SourceSelector extends Component {
                     <Checkbox checked={this.state.useVideojs} onChange={() => this.setState({ useVideojs: !this.state.useVideojs })}>Videojs</Checkbox>
                 </Col>
                 <Col md={1}>
-                    <Button bsStyle="primary" type="submit" onClick={() => this.submitNewSource()}>
+                    <Button bsStyle="primary" type="submit" onClick={() => this.props.onSubmit(this.state.source,this.state.type, this.state.useVideojs)}>
                         Load
                     </Button>
                 </Col>

@@ -6,6 +6,14 @@ import Hls from 'hls.js'
 export default class HLSTrack extends React.Component {
 
     componentDidMount() {
+        this.listenToChanges()
+    }
+
+    componentWillUpdate() {
+        this.listenToChanges()
+    }
+
+    listenToChanges() {
         const { mediaPlayer, type } = this.props
         let switchEvent = null
         switch (type) {
@@ -18,9 +26,9 @@ export default class HLSTrack extends React.Component {
             default:
                 switchEvent = Hls.Events.LEVEL_SWITCHED
         }
-        mediaPlayer.on(switchEvent, function () {
+        mediaPlayer.on(switchEvent, () => {
             this.forceUpdate()
-        }.bind(this))
+        })
     }
 
     render() {
@@ -42,10 +50,8 @@ export default class HLSTrack extends React.Component {
             }
         }
         return (
-            <div>
                 <DropdownPanel title={`HLS ${type} track`} data={
                     track !== null ? {...track} : null} />
-            </div>
         )
     }
 }

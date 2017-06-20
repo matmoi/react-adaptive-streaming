@@ -19,23 +19,20 @@ export default class DashTrack extends React.Component {
         const track = mediaPlayer.getCurrentTrackFor(type)
         if (track !== null) {
             const qualityIndex = mediaPlayer.getQualityFor(type)
-            if (qualityIndex !== null) {
-                return (
-                    <div>
-                        <DropdownPanel title={`${type} track`} data={{
-                                qualityIndex: qualityIndex,
-                                bandwidth: track.bitrateList[qualityIndex].bandwidth,
-                                width: track.bitrateList[qualityIndex].width,
-                                height: track.bitrateList[qualityIndex].height,
-                                codec: track.codec,
-                                contentProtection: track.contentProtection,
-                                mimeType: track.mimeType
-                        }} />
-                    </div>
-                )
-            }
+            return (
+                    <DropdownPanel title={`${type} track`} data=
+                        {qualityIndex !== null ? {
+                            qualityIndex: qualityIndex,
+                            bandwidth: track.bitrateList[qualityIndex].bandwidth,
+                            width: track.bitrateList[qualityIndex].width,
+                            height: track.bitrateList[qualityIndex].height,
+                            codec: track.codec,
+                            contentProtection: track.contentProtection,
+                            mimeType: track.mimeType
+                        } : null}
+                        />
+            )
         }
-        return (<div>{`Loading ${type} track`}</div>)
     }
 }
 

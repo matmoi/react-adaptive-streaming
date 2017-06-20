@@ -9,16 +9,13 @@ export default class DashPlayer extends React.Component {
   constructor(props) {
     super(props)
     this.mediaPlayer = null
-    this.state = {
-      loadedmetadata: false
-    }
   }
 
 
   componentDidMount() {
     this.mediaPlayer =  dashjs.MediaPlayer().create();
     this.mediaPlayer.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, () => {
-      this.setState({ loadedmetadata: true })
+      this.forceUpdate()
     });
     this.mediaPlayer.initialize(this.videoNode, this.props.sources.length > 0 ? this.props.sources[0].src : null, this.props.autoplay)
   }
@@ -50,7 +47,7 @@ export default class DashPlayer extends React.Component {
     return (
       <Row>
         <Col md={4}>
-          <DashInfo mediaPlayer={this.mediaPlayer} />}
+          <DashInfo mediaPlayer={this.mediaPlayer} />
         </Col>
         <Col md={6}>
           <video data-dashjs-player autoPlay controls ref={node => this.videoNode = node} style={{ width: "100%" }} />
