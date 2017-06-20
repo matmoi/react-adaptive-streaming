@@ -48,9 +48,9 @@ export default class SourceSelector extends Component {
                 </FormGroup>
                 </Col>
                 <Col md={2}>
-                    <FormControl componentClass="select" onChange={(e) => this.setState({type: e.target.value})}>
+                    <FormControl componentClass="select" onChange={(e) => this.setState({type: e.target.value})} value={this.state.type}>
                         { supportedTypes.map((type, idx) =>
-                            <option key={idx} value={type} selected={this.state.type===type}>{type}</option>
+                            <option key={idx} value={type}>{type}</option>
                         )}
                     </FormControl>
                 </Col>
