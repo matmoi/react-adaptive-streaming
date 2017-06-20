@@ -9,7 +9,6 @@ export default class SourceSelector extends Component {
         super(...args)
         this.sources = Sources.sources
         this.state = {
-            open: false,
             useVideojs: false,
             source:undefined,
             type:undefined
@@ -31,23 +30,19 @@ export default class SourceSelector extends Component {
     }
 
     render() {
-        // const { supportedTypes } = this.props
+        const { supportedTypes } = this.props
         const listSources = this.sources.map((item, idx) =>
             <MenuItem key={idx} eventKey={idx} active={item.src === this.state.source && item.type === this.state.type} onClick={() => this.setState({ source: this.sources[idx].src, type: this.sources[idx].type })}>
                 {item.src} {' '} <small><i>{item.type}</i></small>
             </MenuItem>
         )
 
-        // const types = supportedTypes.map((type, idx) =>
-        //     <option key={idx} value={type}>{type}</option>
-        // )
-
         return (
             <Row className="show-grid">
                 <Col md={1}>
                     Stream url:
                 </Col>
-                <Col md={8}>
+                <Col md={7}>
                 <FormGroup>
                     <InputGroup>
                         <DropdownButton componentClass={InputGroup.Button} id="input-dropdown-addon" title="">
@@ -57,8 +52,12 @@ export default class SourceSelector extends Component {
                     </InputGroup>
                 </FormGroup>
                 </Col>
-                <Col md={1}>
-                    <small><i>{this.state.type}</i></small>
+                <Col md={2}>
+                    <FormControl componentClass="select" onChange={(e) => this.setState({type: e.target.value})}>
+                        { supportedTypes.map((type, idx) =>
+                            <option key={idx} value={type} selected={this.state.type===type}>{type}</option>
+                        )}
+                    </FormControl>
                 </Col>
                 <Col md={1}>
                     <Checkbox checked={this.state.useVideojs} onChange={() => this.setState({ useVideojs: !this.state.useVideojs })}>Videojs</Checkbox>
