@@ -43,7 +43,7 @@ export default class HLSTrack extends React.Component {
         }
         return (
             <div>
-                <DropdownPanel title={`Dash ${type} track`} data={
+                <DropdownPanel title={`HLS ${type} track`} data={
                     track !== null ? {...track} : null} />
             </div>
         )

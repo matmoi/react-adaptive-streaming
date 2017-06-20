@@ -16,8 +16,8 @@ export default class App extends Component {
     this.useVideojs = null;
   }
 
-  loadSrc(source, useVideojs) {
-    this.setState({ sources: [source] })
+  loadSrc(sourceUrl, mimeType, useVideojs) {
+    this.setState({ sources: [{src:sourceUrl,type:mimeType}] })
     this.useVideojs = useVideojs
   }
 
@@ -39,11 +39,7 @@ export default class App extends Component {
           </span>
         </PageHeader>
         <Grid fluid={true}>
-          <Row className="show-grid">
-            <Col md={12}>
-              <SourceSelector onSubmit={this.loadSrc.bind(this)} />
-            </Col>
-          </Row>
+          <SourceSelector onSubmit={this.loadSrc.bind(this)} />
           {player}
         </Grid>
         <Navbar className="fixedBottom">
