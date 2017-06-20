@@ -10,7 +10,7 @@ export default class SourceSelector extends Component {
         this.sources = Sources.sources
         this.state = {
             useVideojs: false,
-            source:undefined,
+            source:"",
             type:undefined
         }
     }
