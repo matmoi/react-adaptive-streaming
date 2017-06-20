@@ -25,10 +25,25 @@ export default class SourceSelector extends Component {
         }
     }
 
+    handleSourceChange(newSource,newType) {
+        this.setState({source:newSource})
+        this.handleTypeChange(newType)
+    }
+
+    handleTypeChange(newType) {
+        this.setState({type: newType})
+        if (newType === "application/x-mpegURL") {
+            this.setState({useVideojs: false}) //https://github.com/videojs/videojs-contrib-hls/issues/600
+        }
+        else if (newType === "video/mp4") {
+            this.setState({useVideojs: true}) //use videojs for mp4 videos
+        }
+    }
+
     render() {
         const { supportedTypes } = this.props
         const listSources = this.sources.map((item, idx) =>
-            <MenuItem key={idx} eventKey={idx} active={item.src === this.state.source && item.type === this.state.type} onClick={() => this.setState({ source: this.sources[idx].src, type: this.sources[idx].type })}>
+            <MenuItem key={idx} eventKey={idx} active={item.src === this.state.source && item.type === this.state.type} onClick={() => this.handleSourceChange(this.sources[idx].src, this.sources[idx].type)}>
                 {item.src} {' '} <small><i>{item.type}</i></small>
             </MenuItem>
         )
@@ -48,14 +63,21 @@ export default class SourceSelector extends Component {
                 </FormGroup>
                 </Col>
                 <Col md={2}>
-                    <FormControl componentClass="select" onChange={(e) => this.setState({type: e.target.value})} value={this.state.type}>
+                    <FormControl componentClass="select" onChange={(e) => 
+                    this.handleTypeChange(e.target.value)} value={this.state.type}>
                         { supportedTypes.map((type, idx) =>
                             <option key={idx} value={type}>{type}</option>
                         )}
                     </FormControl>
                 </Col>
                 <Col md={1}>
+                    {this.state.type === "application/x-mpegURL" ?
+                    <Checkbox disabled checked={false}>Videojs</Checkbox>
+                    : this.state.type === "video/mp4" ?
+                    <Checkbox disabled checked={true}>Videojs</Checkbox>
+                    :
                     <Checkbox checked={this.state.useVideojs} onChange={() => this.setState({ useVideojs: !this.state.useVideojs })}>Videojs</Checkbox>
+                    }
                 </Col>
                 <Col md={1}>
                     <Button bsStyle="primary" type="submit" onClick={() => this.props.onSubmit(this.state.source,this.state.type, this.state.useVideojs)}>
