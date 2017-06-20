@@ -12,6 +12,9 @@ export default class DashTrack extends React.Component {
                 this.forceUpdate()
             }
         }.bind(this))
+        mediaPlayer.on(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, function(change) {
+            this.forceUpdate()
+        }.bind(this))
     }
 
     render() {
@@ -19,7 +22,7 @@ export default class DashTrack extends React.Component {
         const track = mediaPlayer.getCurrentTrackFor(type)
         if (track !== null) {
             const qualityIndex = mediaPlayer.getQualityFor(type)
-            if (qualityIndex) {
+            if (qualityIndex !== null) {
                 return (
                     <DropdownPanel title={`${type} track`} data={{
                             qualityIndex: qualityIndex,
