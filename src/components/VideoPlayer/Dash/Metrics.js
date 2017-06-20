@@ -16,7 +16,7 @@ export default class DashMetrics extends React.Component {
         const { mediaPlayer, type } = this.props
         const metrics = mediaPlayer.getMetricsFor(type)
         return (
-            <DropdownPanel title={ `Dash ${type} metrics` } data={metrics}/>
+            <DropdownPanel title={ `${type} metrics` } data={metrics}/>
         )
     }
 }

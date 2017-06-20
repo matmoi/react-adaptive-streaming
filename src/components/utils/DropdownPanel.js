@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import JSONTree from 'react-json-tree'
 import { Panel, Button, ButtonGroup } from 'react-bootstrap'
+import FontAwesome from 'react-fontawesome'
 
 export default class DropdownPanel extends React.Component {
 
@@ -17,7 +18,7 @@ export default class DropdownPanel extends React.Component {
         return (
             <ButtonGroup vertical block>
                 {data ?
-                    <Button onClick={() => this.setState({ open: !this.state.open })} bsStyle="primary">{title}</Button>
+                    <Button onClick={() => this.setState({ open: !this.state.open })} bsStyle="primary">{title+ ' '}<FontAwesome name={this.state.open ? 'chevron-up' : 'chevron-down'}/></Button>
                     :
                     <Button disabled bsStyle="primary">{title}</Button>
                 }

@@ -40,7 +40,7 @@ export default class SourceSelector extends Component {
                 <Col md={7}>
                 <FormGroup>
                     <InputGroup>
-                        <DropdownButton componentClass={InputGroup.Button} id="input-dropdown-addon" title="">
+                        <DropdownButton componentClass={InputGroup.Button} id="input-dropdown-addon" title="Examples">
                             {listSources}
                         </DropdownButton>
                         <FormControl type="text" value={this.state.source} onChange={(e) => this.setState({source: e.target.value})}/>
@@ -63,22 +63,6 @@ export default class SourceSelector extends Component {
                     </Button>
                 </Col>
             </Row>
-            // <Navbar fluid style={{ width: "100%" }}>
-            //     <Navbar.Header>
-            //         <Navbar.Brand>
-            //             Select stream
-            //         </Navbar.Brand>
-            //         <Navbar.Toggle />
-            //     </Navbar.Header>
-            //     <Nav style={{ width: "80%" }}>
-            //         <NavDropdown pullRight style={{ width: "70%", textAlign: "right" }} title={this.sources[this.state.sourceIdx].src} id="source-selector-dropdown">
-            //             {listSources}
-            //         </NavDropdown>
-            //         <NavItem disabled><i>{this.sources[this.state.sourceIdx].type}</i></NavItem>
-            //         <NavItem style={{ textAlign: "right" }} onSelect={this.props.onSubmit.bind(null, this.sources[this.state.sourceIdx], this.state.useVideojs)}>Submit</NavItem>
-            //     </Nav>
-            //     <Checkbox style={{ textAlign: "right" }} checked={this.state.useVideojs} onChange={() => this.setState({ useVideojs: !this.state.useVideojs })}>Videojs</Checkbox>
-            // </Navbar>
         )
     }
 }
