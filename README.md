@@ -29,7 +29,7 @@ and run server in dev mode using :
 npm start
 ```
 
-#Known issues
+## Known issues
 
 As discussed in this [ticket](https://github.com/videojs/videojs-contrib-hls/issues/600), plugin `contrib-video-hls` doesn't support webpack (yet?). In the meantime, we recommend to use the `hls.js` player directly, and not the videojs wrapper.
 
