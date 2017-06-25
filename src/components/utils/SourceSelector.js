@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { InputGroup, Row, Col, DropdownButton, Button, FormGroup, FormControl, Checkbox, MenuItem } from 'react-bootstrap'
 import Sources from '../../sources.json'
 
-export default class SourceSelector extends Component {
+export default class SourceSelector extends React.Component {
 
     constructor(...args) {
         super(...args)

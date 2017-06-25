@@ -24,7 +24,7 @@ export default class DashMetrics extends React.Component {
 DashMetrics.propTypes = {
     mediaPlayer: PropTypes.object.isRequired,
     type: PropTypes.string
-};
+}
 
 DashMetrics.defaultProps = {
     type: 'audio'

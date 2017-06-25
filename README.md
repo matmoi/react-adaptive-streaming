@@ -4,7 +4,7 @@ react-adaptive-streaming is a web applicaton whose purpose is to demonstrate ada
 
 # Prepare media files
 
-See [https://github.com/matmoi/create-DASH-HLS](https://github.com/matmoi/create-DASH-HLS).
+See [https://github.com/matmoi/create-DASH-HLS](https://github.com/matmoi/create-DASH-HLS) for details. Once 
 
 # Requirements
 

@@ -2,12 +2,13 @@ import dashjs from 'dashjs'
 import React from 'react'
 import PropTypes from 'prop-types'
 import DashInfo from './Info.js'
+import DashTimeSeries from './TimeSeries.js'
 import { Col, Row } from 'react-bootstrap'
 
 export default class DashPlayer extends React.Component {
 
-  constructor(props) {
-    super(props)
+  constructor(...args) {
+    super(...args)
     this.mediaPlayer = null
   }
 
@@ -51,9 +52,7 @@ export default class DashPlayer extends React.Component {
         </Col>
         <Col md={6}>
           <video data-dashjs-player autoPlay controls ref={node => this.videoNode = node} style={{ width: "100%" }} />
-          <div>
-            <code>Timeseries (TBD)</code>
-          </div>
+          <DashTimeSeries mediaPlayer={this.mediaPlayer} />
         </Col>
         <Col md={1}>
           <code>Overall metrics (TBD)</code>
