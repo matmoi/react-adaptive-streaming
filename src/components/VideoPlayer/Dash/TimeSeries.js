@@ -7,7 +7,7 @@ import { VictoryLegend, VictoryAxis, VictoryLine, VictoryChart } from 'victory'
 class MediaTimeSeries extends React.Component {
 
     render () {
-        const { AudioTimeSerie, VideoTimeSerie, yAxisLabel, yAxisTickFormat, x, y , refTime } = this.props
+        const { AudioTimeSerie, VideoTimeSerie, yAxisLabel, yAxisTickFormat, x, y , refTime, interpolation } = this.props
         const legend =
             <VictoryLegend
                     data={[
@@ -62,6 +62,7 @@ class MediaTimeSeries extends React.Component {
                         style={{
                             data:{strokeWidth:1, stroke: "#ff0000"}
                         }}
+                        interpolation={interpolation}
                     />
                 }
                 { AudioTimeSerie.length > 0 &&
@@ -74,6 +75,7 @@ class MediaTimeSeries extends React.Component {
                         style={{
                             data:{strokeWidth:1, stroke: "#ff00ff"}
                         }}
+                        interpolation={interpolation}
                     />
                 }
             </VictoryChart>
@@ -86,9 +88,10 @@ MediaTimeSeries.propTypes = {
     VideoTimeSerie: PropTypes.arrayOf(PropTypes.object),
     yAxisLabel: PropTypes.string,
     yAxisTickFormat: PropTypes.func,
-    x: PropTypes.string.isRequired,
-    y: PropTypes.string.isRequired,
-    refTime: PropTypes.number
+    x: PropTypes.oneOfType([PropTypes.string,PropTypes.func]).isRequired,
+    y: PropTypes.oneOfType([PropTypes.string,PropTypes.func]).isRequired,
+    refTime: PropTypes.number,
+    interpolation: PropTypes.string
 }
 
 MediaTimeSeries.defaultProps = {
@@ -96,7 +99,8 @@ MediaTimeSeries.defaultProps = {
     VideoTimeSerie: [],
     yAxisLabel: "",
     yAxisTickFormat: (t) => t,
-    refTime: 0
+    refTime: 0,
+    interpolation: "linear"
 }
 
 export default class DashTimeSeries extends React.Component {
@@ -132,49 +136,49 @@ export default class DashTimeSeries extends React.Component {
     render() {
         const { mediaPlayer } = this.props
 
-        let videoBufferLevel,audioBufferLevel,videoLatency,audioLatency,videoRepSwitch,audioRepSwitch = []
+        let videoBufferLevel = [],audioBufferLevel = [],videoLatency = [],audioLatency = [],videoRepSwitch = [],audioRepSwitch = []
 
         if (mediaPlayer) {
             let refTime = undefined
             const videoMetrics = mediaPlayer.getMetricsFor("video")
             const audioMetrics = mediaPlayer.getMetricsFor("audio")
-            if (videoMetrics) {
+            if (videoMetrics !== null) {
                 if (videoMetrics.BufferLevel) {
                     videoBufferLevel=videoMetrics.BufferLevel
                     if (videoBufferLevel.length > 0) {
-                        refTime = refTime ? Math.min(refTime,videoBufferLevel[0].t) : videoBufferLevel[0].t
+                        refTime = refTime ? Math.min(refTime,videoBufferLevel[0].t) : videoBufferLevel[0].t.getTime()
                     }
                 }
                 if (videoMetrics.HttpList) {
                     videoLatency=videoMetrics.HttpList
                     if (videoLatency.length > 0) {
-                        refTime = refTime ? Math.min(refTime,videoLatency[0].trequest) : videoLatency[0].trequest
+                        refTime = refTime ? Math.min(refTime,videoLatency[0].trequest) : videoLatency[0].trequest.getTime()
                     }
                 }
                 if (videoMetrics.RepSwitchList) {
                     videoRepSwitch=videoMetrics.RepSwitchList
                     if (videoRepSwitch.length > 0) {
-                        refTime = refTime ? Math.min(refTime,videoRepSwitch[0].t) : videoRepSwitch[0].t
+                        refTime = refTime ? Math.min(refTime,videoRepSwitch[0].t) : videoRepSwitch[0].t.getTime()
                     }
                 }
             }
-            if (audioMetrics) {
+            if (audioMetrics !== null) {
                 if (audioMetrics.BufferLevel) {
                     audioBufferLevel=audioMetrics.BufferLevel
                     if (audioBufferLevel.length > 0) {
-                        refTime = refTime ? Math.min(refTime,audioBufferLevel[0].t) : audioBufferLevel[0].t
+                        refTime = refTime ? Math.min(refTime,audioBufferLevel[0].t) : audioBufferLevel[0].t.getTime()
                     }
                 }
                 if (audioMetrics.HttpList) {
                     audioLatency=audioMetrics.HttpList
                     if (audioLatency.length > 0) {
-                        refTime = refTime ? Math.min(refTime,audioLatency[0].trequest) : audioLatency[0].trequest
+                        refTime = refTime ? Math.min(refTime,audioLatency[0].trequest) : audioLatency[0].trequest.getTime()
                     }
                 }
                 if (audioMetrics.RepSwitchList) {
                     audioRepSwitch=audioMetrics.RepSwitchList
                     if (audioRepSwitch.length > 0) {
-                        refTime = refTime ? Math.min(refTime,audioRepSwitch[0].t) : audioRepSwitch[0].t
+                        refTime = refTime ? Math.min(refTime,audioRepSwitch[0].t) : audioRepSwitch[0].t.getTime()
                     }
                 }
             }
@@ -182,14 +186,17 @@ export default class DashTimeSeries extends React.Component {
             if (refTime) {
                 return (
                     <div>
-                        { (videoBufferLevel || audioBufferLevel) &&
+                        { (videoBufferLevel.length > 0 || audioBufferLevel.length > 0) &&
                             <MediaTimeSeries VideoTimeSerie={videoBufferLevel} AudioTimeSerie={audioBufferLevel} x="t" y="level" yAxisLabel="Buffer level (s)" yAxisTickFormat={(tick) => tick / 1000} refTime={refTime}/>
                         }
-                        { (videoLatency || audioLatency) &&
+                        { (videoLatency.length > 0 || audioLatency.length > 0) &&
                             <MediaTimeSeries VideoTimeSerie={videoLatency} AudioTimeSerie={audioLatency} x="trequest" y="interval" yAxisLabel="Latency (s)" yAxisTickFormat={(tick) => tick / 1000} refTime={refTime}/>
                         }
-                        { (videoRepSwitch || audioRepSwitch) &&
-                            <MediaTimeSeries VideoTimeSerie={videoRepSwitch} AudioTimeSerie={audioRepSwitch} x="t" y="to" yAxisLabel="RepSwitch" refTime={refTime}/>
+                        { (videoLatency.length > 0 || audioLatency.length > 0) &&
+                            <MediaTimeSeries VideoTimeSerie={videoLatency} AudioTimeSerie={audioLatency} x="trequest" y={(req) => (req.range === null ? 0 : (req.range.split('-').reduce((startByte,endByte) => (endByte - startByte)*8)) / req.interval)} yAxisLabel="Download (kbps)" refTime={refTime} interpolation="bundle"/>
+                        }
+                        { (videoRepSwitch.length > 0 || audioRepSwitch.length > 0) &&
+                            <MediaTimeSeries VideoTimeSerie={videoRepSwitch} AudioTimeSerie={audioRepSwitch} x="t" y="to" yAxisLabel="RepSwitch" refTime={refTime} interpolation="stepAfter"/>
                         }
                     </div>
                 )
@@ -202,5 +209,5 @@ export default class DashTimeSeries extends React.Component {
 }
 
 DashTimeSeries.propTypes = {
-    mediaPlayer: PropTypes.object,
+    mediaPlayer: PropTypes.object
 }
