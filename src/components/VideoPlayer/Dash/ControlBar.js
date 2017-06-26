@@ -615,6 +615,11 @@ export default function(dashjsMediaPlayer, displayUTCTimeCodes) {
             document.addEventListener("mozfullscreenchange", onFullScreenChange, false);
             document.addEventListener("webkitfullscreenchange", onFullScreenChange, false);
 
+            //IE 11 Input Fix.
+            if (isIE()) {
+                coerceIEInputAndChangeEvents(seekbar, true);
+                coerceIEInputAndChangeEvents(volumebar, false);
+            }
         },
 
         show: function () {
