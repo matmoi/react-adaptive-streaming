@@ -1,10 +1,14 @@
+# [Live demo](http://video.moutonnoir.eu/)
+
 # Introduction
 
 react-adaptive-streaming is a web applicaton whose purpose is to demonstrate adaptive bitrate streaming techniques, namely [DASH](http://dashif.org/about/) and [HLS](https://developer.apple.com/streaming/). We use the advantage of [React component's lifecycle](https://facebook.github.io/react/docs/state-and-lifecycle.html) together with composition to swap rendering video elements from the DOM, alternatively between the three players [dash.js](https://github.com/Dash-Industry-Forum/dash.js), [hls.js](https://github.com/video-dev/hls.js/tree/master) and [videojs](https://github.com/videojs/video.js).
 
 # Prepare media files
 
-See [https://github.com/matmoi/create-DASH-HLS](https://github.com/matmoi/create-DASH-HLS) for details. Once 
+See [https://github.com/matmoi/create-DASH-HLS](https://github.com/matmoi/create-DASH-HLS) for instructions on how to encode your different streams properly.
+
+If you'd like to customize the pre-defined list of input streams, simply edit `sources.json` in the top directory, for each source you must specify the url (or relative path on same server) and mime type, either `application/dash+xml`, `application/x-mpegURL` or `video/mp4`.
 
 # Requirements
 
@@ -25,9 +29,9 @@ and run server in dev mode using :
 npm start
 ```
 
-#Known issues
+## Known issues
 
-As discussed in this [ticket](https://github.com/videojs/videojs-contrib-hls/issues/600), plugin `contrib-video-hls` doesn't support webpack (yet?). In the meantime, we recommend to use the `hls.js` player directly, and not the videojs wrapper.
+- As discussed in this [ticket](https://github.com/videojs/videojs-contrib-hls/issues/600), plugin `contrib-video-hls` doesn't support webpack (yet?). In the meantime, we recommend to use the `hls.js` player directly, and not the videojs wrapper.
 
 # Similar tools
 

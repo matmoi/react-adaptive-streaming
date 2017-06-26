@@ -33,7 +33,7 @@ export default class App extends React.Component {
     }
     return (
       <div>
-        <PageHeader>
+        <PageHeader style={{ marginTop: 0, marginLeft: 15 }}>
           <span>
             HTTP Live Streaming <small> for HLS and DASH </small>
           </span>
