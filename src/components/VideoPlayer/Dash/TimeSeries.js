@@ -131,20 +131,69 @@ export default class DashTimeSeries extends React.Component {
 
     render() {
         const { mediaPlayer } = this.props
+
+        let videoBufferLevel,audioBufferLevel,videoLatency,audioLatency,videoRepSwitch,audioRepSwitch = []
+
         if (mediaPlayer) {
-            const videoBufferLevel = mediaPlayer.getMetricsFor("video").BufferLevel
-            const audioBufferLevel = mediaPlayer.getMetricsFor("audio").BufferLevel
-            const videoLatency = mediaPlayer.getMetricsFor("video").HttpList
-            const audioLatency = mediaPlayer.getMetricsFor("audio").HttpList
+            let refTime = undefined
+            const videoMetrics = mediaPlayer.getMetricsFor("video")
+            const audioMetrics = mediaPlayer.getMetricsFor("audio")
+            if (videoMetrics) {
+                if (videoMetrics.BufferLevel) {
+                    videoBufferLevel=videoMetrics.BufferLevel
+                    if (videoBufferLevel.length > 0) {
+                        refTime = refTime ? Math.min(refTime,videoBufferLevel[0].t) : videoBufferLevel[0].t
+                    }
+                }
+                if (videoMetrics.HttpList) {
+                    videoLatency=videoMetrics.HttpList
+                    if (videoLatency.length > 0) {
+                        refTime = refTime ? Math.min(refTime,videoLatency[0].trequest) : videoLatency[0].trequest
+                    }
+                }
+                if (videoMetrics.RepSwitchList) {
+                    videoRepSwitch=videoMetrics.RepSwitchList
+                    if (videoRepSwitch.length > 0) {
+                        refTime = refTime ? Math.min(refTime,videoRepSwitch[0].t) : videoRepSwitch[0].t
+                    }
+                }
+            }
+            if (audioMetrics) {
+                if (audioMetrics.BufferLevel) {
+                    audioBufferLevel=audioMetrics.BufferLevel
+                    if (audioBufferLevel.length > 0) {
+                        refTime = refTime ? Math.min(refTime,audioBufferLevel[0].t) : audioBufferLevel[0].t
+                    }
+                }
+                if (audioMetrics.HttpList) {
+                    audioLatency=audioMetrics.HttpList
+                    if (audioLatency.length > 0) {
+                        refTime = refTime ? Math.min(refTime,audioLatency[0].trequest) : audioLatency[0].trequest
+                    }
+                }
+                if (audioMetrics.RepSwitchList) {
+                    audioRepSwitch=audioMetrics.RepSwitchList
+                    if (audioRepSwitch.length > 0) {
+                        refTime = refTime ? Math.min(refTime,audioRepSwitch[0].t) : audioRepSwitch[0].t
+                    }
+                }
+            }
 
-            const refTime = Math.min(videoLatency[0].trequest,audioLatency[0].trequest)
-
-            return (
-                <div>
-                    <MediaTimeSeries VideoTimeSerie={videoBufferLevel} AudioTimeSerie={audioBufferLevel} x="t" y="level" yAxisLabel="Buffer level (s)" yAxisTickFormat={(tick) => tick / 1000} refTime={refTime}/>
-                    <MediaTimeSeries VideoTimeSerie={videoLatency} AudioTimeSerie={audioLatency} x="trequest" y="interval" yAxisLabel="Latency (s)" yAxisTickFormat={(tick) => tick / 1000} refTime={refTime}/>
-                </div>
-            )
+            if (refTime) {
+                return (
+                    <div>
+                        { (videoBufferLevel || audioBufferLevel) &&
+                            <MediaTimeSeries VideoTimeSerie={videoBufferLevel} AudioTimeSerie={audioBufferLevel} x="t" y="level" yAxisLabel="Buffer level (s)" yAxisTickFormat={(tick) => tick / 1000} refTime={refTime}/>
+                        }
+                        { (videoLatency || audioLatency) &&
+                            <MediaTimeSeries VideoTimeSerie={videoLatency} AudioTimeSerie={audioLatency} x="trequest" y="interval" yAxisLabel="Latency (s)" yAxisTickFormat={(tick) => tick / 1000} refTime={refTime}/>
+                        }
+                        { (videoRepSwitch || audioRepSwitch) &&
+                            <MediaTimeSeries VideoTimeSerie={videoRepSwitch} AudioTimeSerie={audioRepSwitch} x="t" y="to" yAxisLabel="RepSwitch" refTime={refTime}/>
+                        }
+                    </div>
+                )
+            }
         }
         return (
             <div></div>
