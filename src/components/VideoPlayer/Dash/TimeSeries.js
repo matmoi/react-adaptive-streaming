@@ -43,7 +43,7 @@ class MediaTimeSeries extends React.Component {
 
                 <VictoryAxis
                     dependentAxis={false}
-                    tickFormat={(tick) => (VideoTimeSerie ? VideoTimeSerie.length > 30 : false || AudioTimeSerie ? AudioTimeSerie.length > 30 : false) ? Math.trunc(((tick - refTime) / 1000)) : ((tick - refTime) / 1000)}
+                    tickFormat={(tick) => (VideoTimeSerie.length > 30 || AudioTimeSerie.length > 30) ? Math.trunc(((tick - refTime) / 1000)) : ((tick - refTime) / 1000)}
                     style={{
                         axis: {stroke: "#756f6a"},
                         ticks: {stroke: "grey"},
@@ -52,29 +52,51 @@ class MediaTimeSeries extends React.Component {
                 />
 
                 { legend }
-                <VictoryLine
-                    data={ VideoTimeSerie }
-                    x={x}
-                    y={y}
-                    sortKey="x"
-                    scale="time"
-                    style={{
-                        data:{strokeWidth:1, stroke: "#ff0000"}
-                    }}
-                />
-                <VictoryLine
-                    data={ AudioTimeSerie }
-                    x={x}
-                    y={y}
-                    sortKey="x"
-                    scale="time"
-                    style={{
-                        data:{strokeWidth:1, stroke: "#ff00ff"}
-                    }}
-                />
+                { VideoTimeSerie.length > 0 &&
+                    <VictoryLine
+                        data={ VideoTimeSerie }
+                        x={x}
+                        y={y}
+                        sortKey="x"
+                        scale="time"
+                        style={{
+                            data:{strokeWidth:1, stroke: "#ff0000"}
+                        }}
+                    />
+                }
+                { AudioTimeSerie.length > 0 &&
+                    <VictoryLine
+                        data={ AudioTimeSerie }
+                        x={x}
+                        y={y}
+                        sortKey="x"
+                        scale="time"
+                        style={{
+                            data:{strokeWidth:1, stroke: "#ff00ff"}
+                        }}
+                    />
+                }
             </VictoryChart>
         )
     }
+}
+
+MediaTimeSeries.propTypes = {
+    AudioTimeSerie: PropTypes.arrayOf(PropTypes.object),
+    VideoTimeSerie: PropTypes.arrayOf(PropTypes.object),
+    yAxisLabel: PropTypes.string,
+    yAxisTickFormat: PropTypes.func,
+    x: PropTypes.string.isRequired,
+    y: PropTypes.string.isRequired,
+    refTime: PropTypes.number
+}
+
+MediaTimeSeries.defaultProps = {
+    AudioTimeSerie: [],
+    VideoTimeSerie: [],
+    yAxisLabel: "",
+    yAxisTickFormat: (t) => t,
+    refTime: 0
 }
 
 export default class DashTimeSeries extends React.Component {
@@ -92,7 +114,7 @@ export default class DashTimeSeries extends React.Component {
 
     componentWillUnmount() {
         if (this.mediaPlayer) {
-            this.mediaPlayer.off(dashjs.MediaPlayer.events.METRIC_CHANGED, ()=>{})
+            this.mediaPlayer.off(dashjs.MediaPlayer.events.METRIC_CHANGED, null)
             this.mediaPlayer = null
         }
     }
