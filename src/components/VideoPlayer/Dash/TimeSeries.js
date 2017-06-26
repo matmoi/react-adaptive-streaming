@@ -40,7 +40,7 @@ export default class DashTimeSeries extends React.Component {
             return (
                 <VictoryChart
                     easing="linear"
-                    height="200"
+                    height={ 200 }
                 >
                     <VictoryLine
                         interpolation="natural"

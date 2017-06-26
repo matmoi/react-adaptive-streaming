@@ -54,32 +54,32 @@ export default class DashPlayer extends React.Component {
         </Col>
         <Col md={6}>
           <video data-dashjs-player autoPlay controls ref={node => this.videoNode = node} style={{ width: "100%" }} />
-            <div id="videoController" className="video-controller unselectable">
-    <div id="playPauseBtn" className="btn-play-pause" title="Play/Pause">
-        <span id="iconPlayPause" className="icon-play"></span>
-    </div>
-    <span id="videoTime" className="time-display">00:00:00</span>
-    <div id="fullscreenBtn" className="btn-fullscreen control-icon-layout" title="Fullscreen">
-        <span className="icon-fullscreen-enter"></span>
-    </div>
-    <div id="bitrateListBtn" className="control-icon-layout" title="Bitrate List">
-        <span className="icon-bitrate"></span>
-    </div>
-    <input type="range" id="volumebar" className="volumebar" value="1" min="0" max="1" step=".01"/>
-    <div id="muteBtn" className="btn-mute control-icon-layout" title="Mute">
-        <span id="iconMute" className="icon-mute-off"></span>
-    </div>
-    <div id="trackSwitchBtn" className="control-icon-layout" title="A/V Tracks">
-        <span className="icon-tracks"></span>
-    </div>
-    <div id="captionBtn" className="btn-caption control-icon-layout" title="Closed Caption">
-        <span className="icon-caption"></span>
-    </div>
-    <span id="videoDuration" className="duration-display">00:00:00</span>
-    <div className="seekContainer">
-        <input type="range" id="seekbar" value="0" className="seekbar" min="0" step="0.01"/>
-    </div>
-</div>
+          <div id="videoController" className="video-controller unselectable">
+            <div id="playPauseBtn" className="btn-play-pause" title="Play/Pause">
+                <span id="iconPlayPause" className="icon-play"></span>
+            </div>
+            <span id="videoTime" className="time-display">00:00:00</span>
+            <div id="fullscreenBtn" className="btn-fullscreen control-icon-layout" title="Fullscreen">
+                <span className="icon-fullscreen-enter"></span>
+            </div>
+            <div id="bitrateListBtn" className="control-icon-layout" title="Bitrate List">
+                <span className="icon-bitrate"></span>
+            </div>
+            <input type="range" id="volumebar" className="volumebar" min="0" max="1" step=".01"/>
+            <div id="muteBtn" className="btn-mute control-icon-layout" title="Mute">
+                <span id="iconMute" className="icon-mute-off"></span>
+            </div>
+            <div id="trackSwitchBtn" className="control-icon-layout" title="A/V Tracks">
+                <span className="icon-tracks"></span>
+            </div>
+            <div id="captionBtn" className="btn-caption control-icon-layout" title="Closed Caption">
+                <span className="icon-caption"></span>
+            </div>
+            <span id="videoDuration" className="duration-display">00:00:00</span>
+            <div className="seekContainer">
+                <input type="range" id="seekbar" className="seekbar" min="0" step="0.01"/>
+            </div>
+          </div>
           <DashTimeSeries mediaPlayer={this.mediaPlayer} />
         </Col>
         <Col md={1}>

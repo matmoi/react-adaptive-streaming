@@ -37,9 +37,9 @@
 .duration-display{
     padding:11px;
     color: white;
-    font-weight: normal;
-    font-size: .9em;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal!important;
+    font-size: .9em!important;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif!important;
 }
 
 .time-display{
@@ -69,12 +69,13 @@
 
 .volumebar {
     float: right;
-    width: 70px;
+    width: 70px!important;
 }
 
 .video-controller {
     min-height:35px;
     z-index: 2147483646;
+    line-height: 1!important;
 }
 
 .video-controller-fullscreen {
@@ -92,9 +93,9 @@
 
 .menu-item-unselected,
 .menu-item-selected{
-    font-weight: normal;
-    font-size: .9em;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal!important;
+    font-size: .9em!important;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif!important;
 }
 
 .menu-item-unselected {
@@ -110,9 +111,9 @@
 .menu-sub-menu-title {
     background-color: #191919;
     padding-left: 2px;
-    font-weight: bold;
-    font-size: 1.0em;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold!important;
+    font-size: 1.0em!important;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif!important;
 
 }
 

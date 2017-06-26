@@ -106,7 +106,7 @@ export default function(dashjsMediaPlayer, displayUTCTimeCodes) {
 // ************************************************************************************
 
         onSeekBarChange = function (e) {
-            player.seek(parseFloat(seekbar.value));
+            player.seek(e.target.valueAsNumber);
         },
 
         onSeeking = function (e) {
@@ -150,14 +150,15 @@ export default function(dashjsMediaPlayer, displayUTCTimeCodes) {
 //************************************************************************************
 
         onFullScreenChange = function (e) {
+            var icon = undefined;
             if (isFullscreen()) {
                 enterFullscreen();
-                var icon = fullscreenBtn.querySelector(".icon-fullscreen-enter")
+                icon = fullscreenBtn.querySelector(".icon-fullscreen-enter")
                 icon.classList.remove("icon-fullscreen-enter");
                 icon.classList.add("icon-fullscreen-exit");
             } else {
                 exitFullscreen();
-                var icon = fullscreenBtn.querySelector(".icon-fullscreen-exit")
+                icon = fullscreenBtn.querySelector(".icon-fullscreen-exit")
                 icon.classList.remove("icon-fullscreen-exit");
                 icon.classList.add("icon-fullscreen-enter");
             }
@@ -253,6 +254,7 @@ export default function(dashjsMediaPlayer, displayUTCTimeCodes) {
         onStreamInitialized = function (e) {
 
             var contentFunc;
+            var func;
             //Bitrate Menu
             if (bitrateListBtn) {
                 destroyBitrateMenu();
@@ -267,7 +269,7 @@ export default function(dashjsMediaPlayer, displayUTCTimeCodes) {
                         return isNaN(index) ? " Auto Switch" : Math.floor(element.bitrate / 1000) + " kbps";
                     }
                     bitrateListMenu = createMenu(availableBitrates, contentFunc);
-                    var func = function () {
+                    func = function () {
                         onMenuClick(bitrateListMenu, bitrateListBtn);
                     };
                     menuHandlersList.push(func);
@@ -290,7 +292,7 @@ export default function(dashjsMediaPlayer, displayUTCTimeCodes) {
                         return 'Language: ' + element.lang + ' - Role: ' + element.roles[0];
                     }
                     trackSwitchMenu = createMenu(availableTracks, contentFunc);
-                    var func = function () {
+                    func = function () {
                         onMenuClick(trackSwitchMenu, trackSwitchBtn);
                     };
                     menuHandlersList.push(func);
@@ -320,6 +322,7 @@ export default function(dashjsMediaPlayer, displayUTCTimeCodes) {
                     break;
                 case 'track' :
                 case 'bitrate' :
+                default :
                     if (info.video.length > 1) {
                         el.appendChild(createMediaTypeMenu("video"));
                         el = createMenuContent(el, getMenuContent(menuType, info.video, contentFunc), 'video', 'video-' + menuType + '-list');
@@ -338,27 +341,30 @@ export default function(dashjsMediaPlayer, displayUTCTimeCodes) {
         },
 
         getMenuInitialIndex = function(info, menuType, mediaType) {
+            var idx;
             if (menuType === 'track') {
 
                 var mediaInfo = player.getCurrentTrackFor(mediaType);
-                var idx = 0
+                idx = 0
                 info.some(function(element, index){
                     if (isTracksEqual(element, mediaInfo)) {
                         idx = index;
                         return true;
                     }
+                    return false;
                 })
                 return idx;
 
             } else if (menuType === "bitrate") {
                 return player.getAutoSwitchQualityFor(mediaType) ? 0 : player.getQualityFor(mediaType);
             } else if (menuType === "caption") {
-                var idx = 0
+                idx = 0
                 info.arr.some(function(element, index){
                     if (element.defaultTrack) {
                         idx = index + 1;
                         return true;
                     }
+                    return false;
                 })
 
                 return idx;
@@ -493,6 +499,7 @@ export default function(dashjsMediaPlayer, displayUTCTimeCodes) {
                         break
                     case 'video-track-list' :
                     case 'audio-track-list' :
+                    default :
                         player.setCurrentTrack(player.getTracksFor(self.mediaType)[self.index]);
                         break;
                 }
@@ -608,11 +615,6 @@ export default function(dashjsMediaPlayer, displayUTCTimeCodes) {
             document.addEventListener("mozfullscreenchange", onFullScreenChange, false);
             document.addEventListener("webkitfullscreenchange", onFullScreenChange, false);
 
-            //IE 11 Input Fix.
-            if (isIE()) {
-                coerceIEInputAndChangeEvents(seekbar, true);
-                coerceIEInputAndChangeEvents(volumebar, false);
-            }
         },
 
         show: function () {
