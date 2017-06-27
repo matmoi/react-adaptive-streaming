@@ -10,7 +10,7 @@ class MediaTimeSeries extends React.Component {
         const { AudioTimeSerie, VideoTimeSerie, yAxisLabel, yAxisTickFormat, xAxis, x, y, interpolation } = this.props
 
         return (
-            <VictoryChart height={ 100 } padding={{top: 5, bottom: 20, left: 20, right:5}}>
+            <VictoryChart height={ 100 } padding={{top: 5, bottom: 20, left: 20, right:5}} animate={{duration: 500, onLoad: {duration: 1000}}} easing="linear">
                 <VictoryLegend
                     data={[
                         {name: 'video', labels: { fill: "#ff0000" }, symbol: {type:"circle",size:1}},
@@ -208,7 +208,7 @@ export default class DashTimeSeries extends React.Component {
                             <MediaTimeSeries VideoTimeSerie={videoLatency} AudioTimeSerie={audioLatency} x="trequest" y={(req) => (req.range === null ? 0 : (req.range.split('-').reduce((startByte,endByte) => (endByte - startByte)*0.008)) / req.interval)} yAxisLabel="Download (kbps)" xAxis={xAxis} interpolation="bundle"/>
                         }
                         { (videoRepSwitch.length > 0 || audioRepSwitch.length > 0) &&
-                            <MediaTimeSeries VideoTimeSerie={videoRepSwitch} AudioTimeSerie={audioRepSwitch} x="t" y="to" yAxisLabel="RepSwitch" xAxis={xAxis} interpolation="step"/>
+                            <MediaTimeSeries VideoTimeSerie={videoRepSwitch} AudioTimeSerie={audioRepSwitch} x="t" y="to" yAxisLabel="RepSwitch" xAxis={xAxis} interpolation="stepBefore"/>
                         }
                     </div>
                 )
