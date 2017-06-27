@@ -131,7 +131,7 @@ export default class DashTimeSeries extends React.Component {
     render() {
         const { mediaPlayer } = this.props
 
-        let videoBufferLevel = [],audioBufferLevel = [],videoLatency = [],audioLatency = [],videoRepSwitch = [],audioRepSwitch = []
+        let videoBufferLevel = [],audioBufferLevel = [],videoRequests = [],audioRequests = [], videoSchedulingInfo = [], audioSchedulingInfo = []
 
         if (mediaPlayer) {
             let minTime = null, maxTime = null
@@ -145,18 +145,18 @@ export default class DashTimeSeries extends React.Component {
                         maxTime = maxTime ? Math.max(maxTime,videoBufferLevel[videoBufferLevel.length-1].t.getTime()) : videoBufferLevel[videoBufferLevel.length-1].t.getTime()
                     }
                 }
-                if (videoMetrics.HttpList) {
-                    videoLatency=videoMetrics.HttpList
-                    if (videoLatency.length > 0) {
-                        minTime = minTime ? Math.min(minTime,videoLatency[0].trequest.getTime()) : videoLatency[0].trequest.getTime()
-                        maxTime = maxTime ? Math.max(maxTime,videoLatency[videoLatency.length-1].trequest.getTime()) : videoLatency[videoLatency.length-1].trequest.getTime()
+                if (videoMetrics.RequestsQueue && videoMetrics.RequestsQueue.executedRequests) {
+                    videoRequests=videoMetrics.RequestsQueue.executedRequests
+                    if (videoRequests.length > 0) {
+                        minTime = minTime ? Math.min(minTime,videoRequests[0].requestStartDate.getTime()) : videoRequests[0].requestStartDate.getTime()
+                        maxTime = maxTime ? Math.max(maxTime,videoRequests[videoRequests.length-1].requestStartDate.getTime()) : videoRequests[videoRequests.length-1].requestStartDate.getTime()
                     }
                 }
-                if (videoMetrics.RepSwitchList) {
-                    videoRepSwitch=videoMetrics.RepSwitchList
-                    if (videoRepSwitch.length > 0) {
-                        minTime = minTime ? Math.min(minTime,videoRepSwitch[0].t.getTime()) : videoRepSwitch[0].t.getTime()
-                        maxTime = maxTime ? Math.max(maxTime,videoRepSwitch[videoRepSwitch.length-1].t.getTime()) : videoRepSwitch[videoRepSwitch.length-1].t.getTime()
+                if (videoMetrics.SchedulingInfo) {
+                    videoSchedulingInfo=videoMetrics.SchedulingInfo
+                    if (videoSchedulingInfo.length > 0) {
+                        minTime = minTime ? Math.min(minTime,videoSchedulingInfo[0].t.getTime()) : videoSchedulingInfo[0].t.getTime()
+                        maxTime = maxTime ? Math.max(maxTime,videoSchedulingInfo[videoSchedulingInfo.length-1].t.getTime()) : videoSchedulingInfo[videoSchedulingInfo.length-1].t.getTime()
                     }
                 }
             }
@@ -168,18 +168,18 @@ export default class DashTimeSeries extends React.Component {
                         maxTime = maxTime ? Math.max(maxTime,audioBufferLevel[audioBufferLevel.length-1].t.getTime()) : audioBufferLevel[audioBufferLevel.length-1].t.getTime()
                     }
                 }
-                if (audioMetrics.HttpList) {
-                    audioLatency=audioMetrics.HttpList
-                    if (audioLatency.length > 0) {
-                        minTime = minTime ? Math.min(minTime,audioLatency[0].trequest.getTime()) : audioLatency[0].trequest.getTime()
-                        maxTime = maxTime ? Math.max(maxTime,audioLatency[audioLatency.length-1].trequest.getTime()) : audioLatency[audioLatency.length-1].trequest.getTime()
+                if (audioMetrics.RequestsQueue && audioMetrics.RequestsQueue.executedRequests) {
+                    audioRequests=audioMetrics.RequestsQueue.executedRequests
+                    if (audioRequests.length > 0) {
+                        minTime = minTime ? Math.min(minTime,audioRequests[0].requestStartDate.getTime()) : audioRequests[0].requestStartDate.getTime()
+                        maxTime = maxTime ? Math.max(maxTime,audioRequests[audioRequests.length-1].requestStartDate.getTime()) : audioRequests[audioRequests.length-1].requestStartDate.getTime()
                     }
                 }
-                if (audioMetrics.RepSwitchList) {
-                    audioRepSwitch=audioMetrics.RepSwitchList
-                    if (audioRepSwitch.length > 0) {
-                        minTime = minTime ? Math.min(minTime,audioRepSwitch[0].t.getTime()) : audioRepSwitch[0].t.getTime()
-                        maxTime = maxTime ? Math.max(maxTime,audioRepSwitch[audioRepSwitch.length-1].t.getTime()) : audioRepSwitch[audioRepSwitch.length-1].t.getTime()
+                if (audioMetrics.SchedulingInfo) {
+                    audioSchedulingInfo=audioMetrics.SchedulingInfo
+                    if (audioSchedulingInfo.length > 0) {
+                        minTime = minTime ? Math.min(minTime,audioSchedulingInfo[0].t.getTime()) : audioSchedulingInfo[0].t.getTime()
+                        maxTime = maxTime ? Math.max(maxTime,audioSchedulingInfo[audioSchedulingInfo.length-1].t.getTime()) : audioSchedulingInfo[audioSchedulingInfo.length-1].t.getTime()
                     }
                 }
             }
@@ -201,21 +201,21 @@ export default class DashTimeSeries extends React.Component {
                         { (videoBufferLevel.length > 0 || audioBufferLevel.length > 0) &&
                             <MediaTimeSeries VideoTimeSerie={videoBufferLevel} AudioTimeSerie={audioBufferLevel} x="t" y="level" yAxisLabel="Buffer level (s)" yAxisTickFormat={(tick) => tick / 1000} xAxis={xAxis}/>
                         }
-                        { (videoLatency.length > 0 || audioLatency.length > 0) &&
-                            <MediaTimeSeries VideoTimeSerie={videoLatency} AudioTimeSerie={audioLatency} x="trequest" y="interval" yAxisLabel="Latency (s)" yAxisTickFormat={(tick) => tick / 1000} xAxis={xAxis}/>
+                        { (videoRequests.length > 0 || audioRequests.length > 0) &&
+                            <MediaTimeSeries VideoTimeSerie={videoRequests} AudioTimeSerie={audioRequests} x="requestStartDate" y={(req) => (req.requestEndDate-req.requestStartDate)/1000} yAxisLabel="Latency (s)" xAxis={xAxis}/>
                         }
-                        { (videoLatency.length > 0 || audioLatency.length > 0) &&
-                            <MediaTimeSeries VideoTimeSerie={videoLatency} AudioTimeSerie={audioLatency} x="trequest" y={(req) => (req.range === null ? 0 : (req.range.split('-').reduce((startByte,endByte) => (endByte - startByte)*0.008)) / req.interval)} yAxisLabel="Download (kbps)" xAxis={xAxis} interpolation="bundle"/>
+                        { (videoRequests.length > 0 || audioRequests.length > 0) &&
+                            <MediaTimeSeries VideoTimeSerie={videoRequests} AudioTimeSerie={audioRequests} x="requestStartDate" y={(req) => (req.bytesTotal * 8 / (req.requestEndDate-req.requestStartDate))} yAxisLabel="Download (kbps)" xAxis={xAxis} interpolation="bundle"/>
                         }
-                        { (videoRepSwitch.length > 0 || audioRepSwitch.length > 0) &&
-                            <MediaTimeSeries VideoTimeSerie={videoRepSwitch} AudioTimeSerie={audioRepSwitch} x="t" y="to" yAxisLabel="RepSwitch" xAxis={xAxis} interpolation="stepBefore"/>
+                        { (videoSchedulingInfo.length > 0 || audioSchedulingInfo.length > 0) &&
+                            <MediaTimeSeries VideoTimeSerie={videoSchedulingInfo.filter((x) => x.state==="executed")} AudioTimeSerie={audioSchedulingInfo.filter((x) => x.state==="executed")} x="t" y="quality" yAxisLabel="QualityIdx" xAxis={xAxis} interpolation="stepAfter"/>
                         }
                     </div>
                 )
             }
         }
         return (
-            <div></div>
+            <div/>
         )
     }
 }
