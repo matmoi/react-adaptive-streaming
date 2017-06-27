@@ -146,7 +146,7 @@ export default class DashTimeSeries extends React.Component {
                     }
                 }
                 if (videoMetrics.RequestsQueue && videoMetrics.RequestsQueue.executedRequests) {
-                    videoRequests=videoMetrics.RequestsQueue.executedRequests
+                    videoRequests=videoMetrics.RequestsQueue.executedRequests.filter(x=>x.requestStartDate !== null)
                     if (videoRequests.length > 0) {
                         minTime = minTime ? Math.min(minTime,videoRequests[0].requestStartDate.getTime()) : videoRequests[0].requestStartDate.getTime()
                         maxTime = maxTime ? Math.max(maxTime,videoRequests[videoRequests.length-1].requestStartDate.getTime()) : videoRequests[videoRequests.length-1].requestStartDate.getTime()

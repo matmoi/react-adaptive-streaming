@@ -83,7 +83,7 @@ export default class DashPlayer extends React.Component {
           </div>
           <DashTimeSeries mediaPlayer={this.mediaPlayer} />
         </Col>
-        <Col md={1}>
+        <Col md={2}>
           <DashOverallMetrics mediaPlayer={this.mediaPlayer} />
         </Col>
       </Row>
