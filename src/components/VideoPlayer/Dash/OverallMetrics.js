@@ -80,7 +80,8 @@ export default class DashOverallMetrics extends React.Component {
                             x="index"
                             y="duration"
                             style={{
-                                data: { opacity: q => q.index === currentTrackIndex ? 1.0 : 0.5},
+                                data: { stroke : "yellow",
+                                        strokeWidth : x=>x.index === currentTrackIndex ? 4 : 0},
                                 labels: { fontSize: 18 }
                             }}
                             key={`${type}QualityIdx`}
