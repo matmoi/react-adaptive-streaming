@@ -3,6 +3,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import DashInfo from './Info.js'
 import DashTimeSeries from './TimeSeries.js'
+import DashOverallMetrics from './OverallMetrics.js'
 import { Col, Row } from 'react-bootstrap'
 import ControlBar from './ControlBar.js'
 
@@ -83,7 +84,7 @@ export default class DashPlayer extends React.Component {
           <DashTimeSeries mediaPlayer={this.mediaPlayer} />
         </Col>
         <Col md={1}>
-          <code>Overall metrics (TBD)</code>
+          <DashOverallMetrics mediaPlayer={this.mediaPlayer} />
         </Col>
       </Row>
     )
