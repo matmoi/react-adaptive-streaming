@@ -57,9 +57,11 @@ export default class DashOverallMetrics extends React.Component {
                         let label = type === "video"
                                     ? `${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].width}x${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].height}`
                                     : `${Math.round(this.mediaPlayer.getTracksFor("audio")[0].bitrateList[x.quality].bandwidth / 1000)}kbps`
-                        qualityIndex[x.quality] = Object.assign({duration:x.duration,label:label,index:x.quality})
+                        qualityIndex[x.quality] = 
+                        {duration:x.duration,label:label,index:x.quality,card:1}
                     } else {
                         qualityIndex[x.quality].duration += x.duration
+                        qualityIndex[x.quality].card += 1
                     }
                 })
             }
