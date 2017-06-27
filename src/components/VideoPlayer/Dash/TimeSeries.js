@@ -10,7 +10,7 @@ class MediaTimeSeries extends React.Component {
         const { AudioTimeSerie, VideoTimeSerie, yAxisLabel, yAxisTickFormat, xAxis, x, y, interpolation } = this.props
 
         return (
-            <VictoryChart height={ 100 } padding={{top: 5, bottom: 20, left: 20, right:5}} animate={{duration: 500, onLoad: {duration: 1000}}} easing="linear">
+            <VictoryChart height={ 100 } padding={{top: 5, bottom: 20, left: 20, right:5}}>
                 <VictoryLegend
                     data={[
                         {name: 'video', labels: { fill: "#ff0000" }, symbol: {type:"circle",size:1}},
@@ -188,7 +188,7 @@ export default class DashTimeSeries extends React.Component {
                 const xAxis =
                     <VictoryAxis
                         dependentAxis={false}
-                        tickValues={Array.from({length: Math.max((maxTime-minTime) / 6000,6)}, (v, k) => k*6000 + minTime)}
+                        tickValues={Array.from({length: 10}, (v, k) => k*Math.max((Math.round((maxTime-minTime) / 10000) * 1000),1000) + minTime)}
                         tickFormat={(x) => (x-minTime) / 1000}
                         style={{
                             axis: {stroke: "#756f6a"},
