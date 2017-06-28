@@ -49,7 +49,7 @@ export default class DashOverallMetrics extends React.Component {
         }
     }
 
-    percentageQualityIdxForTrack(type) {
+    qualityStatsForTrack(type) {
         if (this.mediaPlayer) {
             let metrics = this.mediaPlayer.getMetricsFor(type)
             if (metrics !== null) {
@@ -76,12 +76,24 @@ export default class DashOverallMetrics extends React.Component {
         return []
     }
 
+    renderStatsInfoForType(type,qualityIndex) {
+        let totalSegments = qualityIndex.reduce((a,b) => a + b.card,0);
+        return qualityIndex.map( x => 
+            <tr style={{backgroundColor: Colors[x.index]}} key={`${type}${x.index}AggStatLine`}>
+                <td>{x.index}</td>
+                <td>{x.description}</td>
+                <td>{x.card}</td>
+                <td>{Math.round(x.card / totalSegments * 1000,2)/10}</td>
+            </tr>
+        );
+    }
+
     render() {
         let renderComponents = { video: [], audio: [] }, type;
         if (this.mediaPlayer) {
             for (type of [  ...(this.mediaPlayer.getTracksFor("audio").length > 0 ? ['audio'] : []),
                             ...(this.mediaPlayer.getTracksFor("video").length > 0 ? ['video'] : [])]) {
-                let qualityIndex = this.percentageQualityIdxForTrack(type);
+                let qualityIndex = this.qualityStatsForTrack(type);
                 let currentTrackIndex = this.mediaPlayer.getQualityFor(type);
                 if (qualityIndex.length > 0) {
                     renderComponents[type].push(
@@ -101,9 +113,9 @@ export default class DashOverallMetrics extends React.Component {
                             labels={x => (qualityIndex.filter(i => i.description === x.description).length > 1 ? `${x.description}[${x.index}]`:x.description)} //more than one index have same label ? then append index to label
                         />
                     );
-                    let totalSegments = qualityIndex.reduce((a,b) => a + b.card,0);
+                    
                     renderComponents[type].push(
-                        <Table responsive>
+                        <Table responsive key={`${type}StatTable`}>
                             <thead>
                             <tr>
                                 <th>idx</th>
@@ -113,14 +125,7 @@ export default class DashOverallMetrics extends React.Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {qualityIndex.map( x => 
-                                <tr style={{backgroundColor: Colors[x.index]}}>
-                                    <td>{x.index}</td>
-                                    <td>{x.description}</td>
-                                    <td>{x.card}</td>
-                                    <td>{Math.round(x.card / totalSegments * 1000,2)/10}</td>
-                                </tr>
-                            )}
+                            { this.renderStatsInfoForType(type,qualityIndex) }
                             </tbody>
                         </Table>
                     );
