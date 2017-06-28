@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import JSONTree from 'react-json-tree'
 import videojs from 'video.js'
-import { OverlayTrigger, Button, Popover } from 'react-bootstrap'
+import { OverlayTrigger, Button, Popover, ButtonGroup } from 'react-bootstrap'
 
 export default class VideojsInfo extends React.Component {
 
@@ -28,7 +28,9 @@ export default class VideojsInfo extends React.Component {
 
         return (
             <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={ popoverClickRootClose }>
-                <Button>Player info</Button>
+                <ButtonGroup vertical block key={`videoPlayerInfoButton`}>
+                    <Button>Player info</Button>
+                </ButtonGroup>
             </OverlayTrigger>
         )
     }

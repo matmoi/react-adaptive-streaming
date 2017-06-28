@@ -7,6 +7,7 @@ import Mp4Stream from '../MP4/Stream.js'
 import VideojsInfo from './Info.js'
 import DashInfo from '../Dash/Info.js'
 import DashTimeSeries from '../Dash/TimeSeries.js'
+import DashOverallMetrics from '../Dash/OverallMetrics.js'
 import { Col, Row } from 'react-bootstrap'
 
 export default class VideojsPlayer extends React.Component {
@@ -78,9 +79,11 @@ export default class VideojsPlayer extends React.Component {
             }
           </div>
         </Col>
-        <Col md={1}>
+        <Col md={2}>
           <VideojsInfo player={this.player} playerready={this.state.playerready} />
-          <code>Overall metrics (TBD)</code>
+          { isDash &&
+            <DashOverallMetrics mediaPlayer={this.player.dash.mediaPlayer} />
+          }
         </Col>
       </Row>
     )
