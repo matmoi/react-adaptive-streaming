@@ -1,35 +1,37 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import dashjs from 'dashjs'
+import React from 'react';
+import PropTypes from 'prop-types';
+import dashjs from 'dashjs';
 
-import { VictoryPie } from 'victory'
-import { Button, ButtonGroup } from 'react-bootstrap'
+import { VictoryPie } from 'victory';
+import { Button, ButtonGroup } from 'react-bootstrap';
+
+import Colors from "../../utils/Colors.js"
 
 export default class DashOverallMetrics extends React.Component {
     constructor(...args) {
-        super(...args)
+        super(...args);
         this.state = {
             lastUpdate: null
-        }
-        this.mediaPlayer = null
+        };
+        this.mediaPlayer = null;
     }
 
     componentDidMount() {
-        this.mediaPlayer = this.props.mediaPlayer
-        this.observeMediaPlayer()
+        this.mediaPlayer = this.props.mediaPlayer;
+        this.observeMediaPlayer();
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.mediaPlayer !== nextProps.mediaPlayer) {
-            this.mediaPlayer = nextProps.mediaPlayer
-            this.observeMediaPlayer()
+            this.mediaPlayer = nextProps.mediaPlayer;
+            this.observeMediaPlayer();
         }
     }
 
     componentWillUnmount() {
         if (this.mediaPlayer) {
-            this.mediaPlayer.off(dashjs.MediaPlayer.events.METRIC_CHANGED, null)
-            this.mediaPlayer = null
+            this.mediaPlayer.off(dashjs.MediaPlayer.events.METRIC_CHANGED, null);
+            this.mediaPlayer = null;
         }
     }
 
@@ -37,10 +39,10 @@ export default class DashOverallMetrics extends React.Component {
         if (this.mediaPlayer) {
             this.mediaPlayer.on(dashjs.MediaPlayer.events.METRIC_CHANGED,
                 function (change) {
-                    let now = Date.now()
+                    let now = Date.now();
                     if (this.state.lastUpdate === null || now - this.state.lastUpdate > 2000) {
-                        this.setState({ lastUpdate: now })
-                        this.forceUpdate()
+                        this.setState({ lastUpdate: now });
+                        this.forceUpdate();
                     }
                 }.bind(this)
             )
@@ -55,8 +57,8 @@ export default class DashOverallMetrics extends React.Component {
                 metrics.SchedulingInfo.filter(x => x.state === "executed" && !isNaN(x.quality) && !isNaN(x.duration)).forEach(x => {
                     if (! (x.quality in qualityIndex)) {
                         let label = type === "video"
-                                    ? `${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].width}x${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].height}`
-                                    : `${Math.round(this.mediaPlayer.getTracksFor("audio")[0].bitrateList[x.quality].bandwidth / 1000)}kbps`
+                                    ? `${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].width}x${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].height}[${x.quality}]`
+                                    : `${Math.round(this.mediaPlayer.getTracksFor("audio")[0].bitrateList[x.quality].bandwidth / 1000)}kbps[${x.quality}]`
                         qualityIndex[x.quality] = 
                         {duration:x.duration,label:label,index:x.quality,card:1}
                     } else {
@@ -70,11 +72,12 @@ export default class DashOverallMetrics extends React.Component {
     }
 
     render() {
-        let renderComponents = { video: [], audio: [] }, type
+        let renderComponents = { video: [], audio: [] }, type;
         if (this.mediaPlayer) {
-            for (type of ["video", "audio"]) {
-                let qualityIndex = this.percentageQualityIdxForTrack(type)
-                let currentTrackIndex = this.mediaPlayer.getQualityFor(type)
+            for (type of [  ...(this.mediaPlayer.getTracksFor("audio").length > 0 ? ['audio'] : []),
+                            ...(this.mediaPlayer.getTracksFor("video").length > 0 ? ['video'] : [])]) {
+                let qualityIndex = this.percentageQualityIdxForTrack(type);
+                let currentTrackIndex = this.mediaPlayer.getQualityFor(type);
                 if (qualityIndex.length > 0) {
                     renderComponents[type].push(
                         <VictoryPie width={400} height={150}
@@ -83,13 +86,15 @@ export default class DashOverallMetrics extends React.Component {
                             y="duration"
                             style={{
                                 data: { stroke : "yellow",
-                                        strokeWidth : x=>x.index === currentTrackIndex ? 4 : 0},
+                                        strokeWidth : x=>x.index === currentTrackIndex ? 4 : 0,
+                                        fill: x => Colors[x.index]
+                                      },
                                 labels: { fontSize: 18 }
                             }}
                             key={`${type}QualityIdx`}
                             padding={{top:30,left:0,right:0,bottom:30}}
                         />
-                    )
+                    );
                 }
             }
         }
@@ -104,7 +109,7 @@ export default class DashOverallMetrics extends React.Component {
                 </ButtonGroup>
                 {renderComponents.audio}
             </div>
-        )
+        );
     }
 }
 
