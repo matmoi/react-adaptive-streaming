@@ -1,32 +1,33 @@
-import Hls from 'hls.js'
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Col, Row } from 'react-bootstrap'
-import HLSInfo from './Info.js'
+import Hls from 'hls.js';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Col, Row } from 'react-bootstrap';
+import HLSInfo from './Info.js';
+import HLSTimeSeries from './TimeSeries.js';
 
 export default class HLSPlayer extends React.Component {
 
     constructor(props) {
-        super(props)
-        this.mediaPlayer = null
+        super(props);
+        this.mediaPlayer = null;
     }
 
 
     componentDidMount() {
-        this.mediaPlayer = new Hls()
-        this.mediaPlayer.attachMedia(this.videoNode)
+        this.mediaPlayer = new Hls();
+        this.mediaPlayer.attachMedia(this.videoNode);
         this.mediaPlayer.on(Hls.Events.MANIFEST_LOADED, () => {
-            this.forceUpdate()
+            this.forceUpdate();
         })
         if (this.props.sources.length > 0) {
-            this.mediaPlayer.loadSource(this.props.sources[0].src)
+            this.mediaPlayer.loadSource(this.props.sources[0].src);
         }
     }
 
     componentWillUnmount() {
         if (this.mediaPlayer) {
-            this.mediaPlayer.destroy()
-            this.mediaPlayer = null
+            this.mediaPlayer.destroy();
+            this.mediaPlayer = null;
         }
     }
 
@@ -35,14 +36,14 @@ export default class HLSPlayer extends React.Component {
         if (this.mediaPlayer && nextProps.sources.length > 0) {
             for (let i = 0; i < nextProps.sources.length; i++) {
                 if (!this.props.sources[i] || nextProps.sources[i].src !== this.props.sources[i].src) {
-                    this.mediaPlayer.destroy()
-                    this.mediaPlayer = new Hls()
-                    this.mediaPlayer.attachMedia(this.videoNode)
+                    this.mediaPlayer.destroy();
+                    this.mediaPlayer = new Hls();
+                    this.mediaPlayer.attachMedia(this.videoNode);
                     this.mediaPlayer.on(Hls.Events.MANIFEST_LOADED, () => {
-                        this.forceUpdate()
+                        this.forceUpdate();
                     })
-                    this.mediaPlayer.loadSource(nextProps.sources[0].src)
-                    break
+                    this.mediaPlayer.loadSource(nextProps.sources[0].src);
+                    break;
                 }
             }
         }
@@ -59,17 +60,15 @@ export default class HLSPlayer extends React.Component {
                 </Col>
                 <Col md={6}>
                     <video autoPlay controls ref={node => this.videoNode = node} style={{ width: "100%" }} />
-                    <div>
-                        <code>Timeseries (TBD)</code>
-                    </div>
+                    <HLSTimeSeries mediaPlayer={this.mediaPlayer} />
                 </Col>
                 <Col md={1}>
                     <code>Overall metrics (TBD)</code>
                 </Col>
             </Row>
-        )
+        );
     }
-}
+};
 
 HLSPlayer.propTypes = {
     autoplay: PropTypes.bool,
@@ -77,9 +76,9 @@ HLSPlayer.propTypes = {
         src: PropTypes.string,
         type: PropTypes.string,
     }))
-}
+};
 
 HLSPlayer.defaultProps = {
     autoplay: true,
     sources: []
-}
+};

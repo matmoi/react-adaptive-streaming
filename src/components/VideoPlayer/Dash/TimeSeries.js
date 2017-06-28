@@ -104,6 +104,7 @@ export default class DashTimeSeries extends React.Component {
             lastUpdate: null
         };
     }
+    
     componentDidMount() {
         const { mediaPlayer } = this.props;
         this.observeMediaPlayer(mediaPlayer);
@@ -310,8 +311,8 @@ export default class DashTimeSeries extends React.Component {
             </div>
         )
     }
-}
+};
 
 DashTimeSeries.propTypes = {
     mediaPlayer: PropTypes.object
-}
+};
