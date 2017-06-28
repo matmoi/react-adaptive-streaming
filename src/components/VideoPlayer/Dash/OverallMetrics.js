@@ -137,7 +137,9 @@ export default class DashOverallMetrics extends React.Component {
                     );
 
                     renderComponents[type].push(
+                        <div>
                         <Label>Total download: { Math.round(qualityIndex.reduce((acc,x)=>acc+x.bytes, 0) / 1000)} KBytes</Label>
+                        </div>
                     )
                 }
             }
