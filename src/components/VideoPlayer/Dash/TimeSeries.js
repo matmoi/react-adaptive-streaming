@@ -155,16 +155,17 @@ export default class DashTimeSeries extends React.Component {
                 }
                 if (videoMetrics.HttpList) {
                     videoHttpList=videoMetrics.HttpList
-                    videoHttpList.map(x => Object.assign({bytes:x.bytes = x.range == null ? 0 : x.range.split('-').reduce((startByte,endByte) => endByte - startByte)}, ...x));
+                        .map(x => Object.assign({bytes:x.range == null ? 0 : x.range.split('-').reduce((startByte,endByte) => endByte - startByte)},x));
                     if (videoHttpList.length > 0) {
                         minTime = minTime ? Math.min(minTime,videoHttpList[0].trequest.getTime()) : videoHttpList[0].trequest.getTime();
                         maxTime = maxTime ? Math.max(maxTime,videoHttpList[videoHttpList.length-1].trequest.getTime()) : videoHttpList[videoHttpList.length-1].trequest.getTime();
                     }
                 }
                 if (videoMetrics.SchedulingInfo) {
-                    videoSchedulingInfo=videoMetrics.SchedulingInfo.filter(x => x.state==="executed" && ! isNaN(x.startTime))
+                    videoSchedulingInfo=videoMetrics.SchedulingInfo
+                        .filter(x => x.state==="executed" && ! isNaN(x.startTime))
+                        .map(x => Object.assign({bytes : x.range == null ? 0 : x.range.split('-').reduce((startByte,endByte) => endByte - startByte)},x));
                     if (videoSchedulingInfo.length > 0) {
-                        videoSchedulingInfo.map(x => Object.assign({bytes:x.bytes = x.range == null ? 0 : x.range.split('-').reduce((startByte,endByte) => endByte - startByte)}, ...x));
                         minTime = minTime ? Math.min(minTime,videoSchedulingInfo[0].t.getTime()) : videoSchedulingInfo[0].t.getTime();
                         maxTime = maxTime ? Math.max(maxTime,videoSchedulingInfo[videoSchedulingInfo.length-1].t.getTime()) : videoSchedulingInfo[videoSchedulingInfo.length-1].t.getTime();
                     }
@@ -180,16 +181,17 @@ export default class DashTimeSeries extends React.Component {
                 }
                 if (audioMetrics.HttpList) {
                     audioHttpList=audioMetrics.HttpList
+                        .map(x => Object.assign({bytes:x.range == null ? 0 : x.range.split('-').reduce((startByte,endByte) => endByte - startByte)}, x));
                     if (audioHttpList.length > 0) {
-                        audioHttpList.map(x => Object.assign({bytes:x.bytes = x.range == null ? 0 : x.range.split('-').reduce((startByte,endByte) => endByte - startByte)}, ...x));
                         minTime = minTime ? Math.min(minTime,audioHttpList[0].trequest.getTime()) : audioHttpList[0].trequest.getTime()
                         maxTime = maxTime ? Math.max(maxTime,audioHttpList[audioHttpList.length-1].trequest.getTime()) : audioHttpList[audioHttpList.length-1].trequest.getTime()
                     }
                 }
                 if (audioMetrics.SchedulingInfo) {
-                    audioSchedulingInfo=audioMetrics.SchedulingInfo.filter(x => x.state==="executed" && ! isNaN(x.startTime));
+                    audioSchedulingInfo=audioMetrics.SchedulingInfo
+                        .filter(x => x.state==="executed" && ! isNaN(x.startTime))
+                        .map(x => Object.assign({bytes:x.range == null ? 0 : x.range.split('-').reduce((startByte,endByte) => endByte - startByte)}, x));
                     if (audioSchedulingInfo.length > 0) {
-                        audioSchedulingInfo.map(x => Object.assign({bytes:x.bytes = x.range == null ? 0 : x.range.split('-').reduce((startByte,endByte) => endByte - startByte)}, ...x));
                         minTime = minTime ? Math.min(minTime,audioSchedulingInfo[0].t.getTime()) : audioSchedulingInfo[0].t.getTime();
                         maxTime = maxTime ? Math.max(maxTime,audioSchedulingInfo[audioSchedulingInfo.length-1].t.getTime()) : audioSchedulingInfo[audioSchedulingInfo.length-1].t.getTime();
                     }

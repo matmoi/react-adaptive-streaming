@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import dashjs from 'dashjs';
 
 import { VictoryPie } from 'victory';
-import { Button, ButtonGroup, Table } from 'react-bootstrap';
+import { Label, Button, ButtonGroup, Table } from 'react-bootstrap';
 
 import Colors from "../../utils/Colors.js"
 
@@ -53,11 +53,16 @@ export default class DashOverallMetrics extends React.Component {
         if (this.mediaPlayer) {
             let metrics = this.mediaPlayer.getMetricsFor(type)
             if (metrics !== null) {
-                return Object.values(metrics.SchedulingInfo.filter(x => x.state === "executed" && !isNaN(x.quality) && !isNaN(x.duration)).reduce((acc,x) =>
+                return Object.values(
+                    metrics.SchedulingInfo
+                        .filter(x => x.state === "executed" && !isNaN(x.quality) && !isNaN(x.duration) && !isNaN(x.duration))
+                        .map(x => Object.assign({bytes:x.range == null ? 0 : x.range.split('-').reduce((startByte,endByte) => endByte - startByte)}, x))
+                        .reduce((acc,x) =>
                     {
                         if (acc[x.quality]) {
                             acc[x.quality].duration += x.duration;
                             acc[x.quality].card += 1;
+                            acc[x.quality].bytes += x.bytes;
                         } else {
                             acc[x.quality] = {
                                 duration:x.duration,
@@ -65,7 +70,8 @@ export default class DashOverallMetrics extends React.Component {
                                          ? `${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].width}x${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].height}`
                                          : `${Math.round(this.mediaPlayer.getTracksFor("audio")[0].bitrateList[x.quality].bandwidth / 1000)}kbps`,
                                 index: x.quality,
-                                card: 1
+                                card: 1,
+                                bytes: x.bytes
                             };
                         }
                         return acc;
@@ -129,6 +135,10 @@ export default class DashOverallMetrics extends React.Component {
                             </tbody>
                         </Table>
                     );
+
+                    renderComponents[type].push(
+                        <Label>Total download: { Math.round(qualityIndex.reduce((acc,x)=>acc+x.bytes, 0) / 1000)} KBytes</Label>
+                    )
                 }
             }
         }
