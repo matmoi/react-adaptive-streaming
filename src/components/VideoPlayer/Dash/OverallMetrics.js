@@ -50,25 +50,30 @@ export default class DashOverallMetrics extends React.Component {
     }
 
     percentageQualityIdxForTrack(type) {
-        let qualityIndex = Object.assign({})
         if (this.mediaPlayer) {
             let metrics = this.mediaPlayer.getMetricsFor(type)
             if (metrics !== null) {
-                metrics.SchedulingInfo.filter(x => x.state === "executed" && !isNaN(x.quality) && !isNaN(x.duration)).forEach(x => {
-                    if (! (x.quality in qualityIndex)) {
-                        let label = type === "video"
-                                    ? `${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].width}x${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].height}`
-                                    : `${Math.round(this.mediaPlayer.getTracksFor("audio")[0].bitrateList[x.quality].bandwidth / 1000)}kbps`
-                        qualityIndex[x.quality] = 
-                        {duration:x.duration,description:label,index:x.quality,card:1}
-                    } else {
-                        qualityIndex[x.quality].duration += x.duration
-                        qualityIndex[x.quality].card += 1
+                return Object.values(metrics.SchedulingInfo.filter(x => x.state === "executed" && !isNaN(x.quality) && !isNaN(x.duration)).reduce((acc,x) =>
+                    {
+                        if (acc[x.quality]) {
+                            acc[x.quality].duration += x.duration;
+                            acc[x.quality].card += 1;
+                        } else {
+                            acc[x.quality] = {
+                                duration:x.duration,
+                                description: type === "video"
+                                         ? `${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].width}x${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].height}`
+                                         : `${Math.round(this.mediaPlayer.getTracksFor("audio")[0].bitrateList[x.quality].bandwidth / 1000)}kbps`,
+                                index: x.quality,
+                                card: 1
+                            };
+                        }
+                        return acc;
                     }
-                })
+                ,{}));
             }
         }
-        return Object.values(qualityIndex)
+        return []
     }
 
     render() {
