@@ -20,8 +20,8 @@ export default class DashPlayer extends React.Component {
       this.forceUpdate()
     });
     this.mediaPlayer.initialize(this.videoNode, this.props.sources.length > 0 ? this.props.sources[0].src : null, this.props.autoplay)
-    var controlbar = new ControlBar(this.mediaPlayer)
-    controlbar.initialize()
+    this.controlbar = new ControlBar(this.mediaPlayer)
+    this.controlbar.initialize()
   }
 
   componentWillUnmount() {
@@ -36,8 +36,9 @@ export default class DashPlayer extends React.Component {
     if (this.mediaPlayer && nextProps.sources.length > 0) {
       for (let i = 0; i < nextProps.sources.length; i++) {
         if (!this.props.sources[i] || nextProps.sources[i].src !== this.props.sources[i].src) {
-          this.mediaPlayer.attachSource(nextProps.sources[0].src)
-          break
+          this.mediaPlayer.attachSource(nextProps.sources[0].src);
+          this.controlbar.reset();
+          break;
         }
       }
     }
