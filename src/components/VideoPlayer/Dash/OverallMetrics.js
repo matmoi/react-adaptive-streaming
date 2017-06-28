@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import dashjs from 'dashjs';
 
 import { VictoryPie } from 'victory';
-import { Button, ButtonGroup } from 'react-bootstrap';
+import { Button, ButtonGroup, Table } from 'react-bootstrap';
 
 import Colors from "../../utils/Colors.js"
 
@@ -57,10 +57,10 @@ export default class DashOverallMetrics extends React.Component {
                 metrics.SchedulingInfo.filter(x => x.state === "executed" && !isNaN(x.quality) && !isNaN(x.duration)).forEach(x => {
                     if (! (x.quality in qualityIndex)) {
                         let label = type === "video"
-                                    ? `${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].width}x${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].height}[${x.quality}]`
-                                    : `${Math.round(this.mediaPlayer.getTracksFor("audio")[0].bitrateList[x.quality].bandwidth / 1000)}kbps[${x.quality}]`
+                                    ? `${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].width}x${this.mediaPlayer.getTracksFor("video")[0].bitrateList[x.quality].height}`
+                                    : `${Math.round(this.mediaPlayer.getTracksFor("audio")[0].bitrateList[x.quality].bandwidth / 1000)}kbps`
                         qualityIndex[x.quality] = 
-                        {duration:x.duration,label:label,index:x.quality,card:1}
+                        {duration:x.duration,description:label,index:x.quality,card:1}
                     } else {
                         qualityIndex[x.quality].duration += x.duration
                         qualityIndex[x.quality].card += 1
@@ -92,8 +92,32 @@ export default class DashOverallMetrics extends React.Component {
                                 labels: { fontSize: 18 }
                             }}
                             key={`${type}QualityIdx`}
-                            padding={{top:30,left:0,right:0,bottom:30}}
+                            padding={{top:40,left:0,right:0,bottom:40}}
+                            labels={x => (qualityIndex.filter(i => i.description === x.description).length > 1 ? `${x.description}[${x.index}]`:x.description)} //more than one index have same label ? then append index to label
                         />
+                    );
+                    let totalSegments = qualityIndex.reduce((a,b) => a + b.card,0);
+                    renderComponents[type].push(
+                        <Table responsive>
+                            <thead>
+                            <tr>
+                                <th>idx</th>
+                                <th>label</th>
+                                <th>#</th>
+                                <th>%</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {qualityIndex.map( x => 
+                                <tr style={{backgroundColor: Colors[x.index]}}>
+                                    <td>{x.index}</td>
+                                    <td>{x.description}</td>
+                                    <td>{x.card}</td>
+                                    <td>{Math.round(x.card / totalSegments * 1000,2)/10}</td>
+                                </tr>
+                            )}
+                            </tbody>
+                        </Table>
                     );
                 }
             }

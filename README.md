@@ -1,4 +1,8 @@
-# [Live demo](http://video.moutonnoir.eu/)
+# >> [Live demo](http://video.moutonnoir.eu/) <<
+
+## Screenshot
+
+![screenshot](doc/screenshot.png)
 
 # Introduction
 
@@ -28,6 +32,10 @@ and run server in dev mode using :
 ```
 npm start
 ```
+
+Then open a web browser at [http://localhost:3000](http://localhost:3000).
+
+To customize the predefined list of sources (the one showing under the "Examples" dropdown button), edit `sources.json` under root directory accordingly. On first page loading, player will automatically pick up first stream of the list.
 
 ## Known issues
 
