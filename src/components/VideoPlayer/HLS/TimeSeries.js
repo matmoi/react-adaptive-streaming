@@ -11,8 +11,9 @@ export default class HLSTimeSeries extends React.Component {
     constructor(...args) {
         super(...args);
         this.state = {
-            fragments: []
+            fragments: {audio:[],video:[]}
         };
+        this.firstTS = null;
     }
 
     componentDidMount() {
@@ -37,9 +38,17 @@ export default class HLSTimeSeries extends React.Component {
         if (mediaPlayer) {
             mediaPlayer.on(Hls.Events.FRAG_LOADED,
                 function (event, data ) {
-                    let fragments = this.state.fragments;
-                    fragments.push(data);
-                    this.setState(fragments);
+                    this.firstTS = this.firstTS || data.stats.trequest;
+                    if (["audio","video"].includes(data.frag.type)) {
+                        let fragments = this.state.fragments;
+                        fragments[data.frag.type].push(
+                            {
+                                frag: data.frag,
+                                stats: data.stats
+                            }
+                        );
+                        this.setState(fragments);
+                    }
                 }.bind(this)
             )
         }

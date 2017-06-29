@@ -26,25 +26,26 @@ export default class HLSPlayer extends React.Component {
 
     componentWillUnmount() {
         if (this.mediaPlayer) {
+            this.mediaPlayer.detachMedia();
             this.mediaPlayer.destroy();
             this.mediaPlayer = null;
         }
     }
 
     componentWillUpdate(nextProps, nextState) {
-        // Do we need to change videojs player source ?
-        if (this.mediaPlayer && nextProps.sources.length > 0) {
-            for (let i = 0; i < nextProps.sources.length; i++) {
-                if (!this.props.sources[i] || nextProps.sources[i].src !== this.props.sources[i].src) {
+        if (nextProps.sources.length > 0) {
+            if (! this.mediaPlayer || this.props.sources.length == 0 || nextProps.sources[0].src !== this.props.sources[0].src) {
+                if (this.mediaPlayer) {
+                    this.mediaPlayer.detachMedia();
                     this.mediaPlayer.destroy();
-                    this.mediaPlayer = new Hls();
-                    this.mediaPlayer.attachMedia(this.videoNode);
-                    this.mediaPlayer.on(Hls.Events.MANIFEST_LOADED, () => {
-                        this.forceUpdate();
-                    })
-                    this.mediaPlayer.loadSource(nextProps.sources[0].src);
-                    break;
+                    this.mediaPlayer = null;
                 }
+                this.mediaPlayer = new Hls();
+                this.mediaPlayer.attachMedia(this.videoNode);
+                this.mediaPlayer.on(Hls.Events.MANIFEST_LOADED, () => {
+                    this.forceUpdate();
+                })
+                this.mediaPlayer.loadSource(nextProps.sources[0].src);
             }
         }
     }
