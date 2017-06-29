@@ -7,10 +7,14 @@ import FontAwesome from 'react-fontawesome'
 export default class DropdownPanel extends React.Component {
 
     constructor(...args) {
-        super(...args)
+        super(...args);
         this.state = {
-            open: true
-        }
+            open: null
+        };
+    }
+
+    componentWillMount() {
+        this.setState({open:this.props.defaultOpen});
     }
 
     render() {
@@ -36,9 +40,11 @@ export default class DropdownPanel extends React.Component {
 
 DropdownPanel.propTypes = {
     data: PropTypes.object,
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    defaultOpen: PropTypes.bool
 };
 
 DropdownPanel.defaultProps = {
-    data: {}
+    data: {},
+    defaultOpen: true
 }

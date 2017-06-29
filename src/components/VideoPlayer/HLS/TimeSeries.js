@@ -11,19 +11,19 @@ export default class HLSTimeSeries extends React.Component {
     constructor(...args) {
         super(...args);
         this.state = {
-            fragments: {audio:[],video:[]}
+            fragments: {audio:[],main:[]}
         };
-        this.firstTS = null;
     }
 
     componentDidMount() {
-        const { mediaPlayer } = this.props;
-        this.observeMediaPlayer(mediaPlayer);
+        this.mediaPlayer = this.props.mediaPlayer;
+        this.observeMediaPlayer();
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.mediaPlayer !== nextProps.mediaPlayer) {
-            this.observeMediaPlayer(nextProps.mediaPlayer);
+            this.mediaPlayer = nextProps.mediaPlayer;
+            this.observeMediaPlayer();
         }
     }
 
@@ -34,23 +34,24 @@ export default class HLSTimeSeries extends React.Component {
         }
     }
     
-    observeMediaPlayer(mediaPlayer) {
-        if (mediaPlayer) {
-            mediaPlayer.on(Hls.Events.FRAG_LOADED,
-                function (event, data ) {
-                    this.firstTS = this.firstTS || data.stats.trequest;
-                    if (["audio","video"].includes(data.frag.type)) {
-                        let fragments = this.state.fragments;
-                        fragments[data.frag.type].push(
-                            {
-                                frag: data.frag,
-                                stats: data.stats
-                            }
-                        );
-                        this.setState(fragments);
-                    }
-                }.bind(this)
-            )
+    observeMediaPlayer() {
+        if (this.mediaPlayer) {
+            this.mediaPlayer.on(Hls.Events.FRAG_LOADED, (event, data ) => {
+                // console.log(`${event} ${data.frag.type} ${data.frag.sn} ${data.frag.loadIdx}`);
+                if (["audio","main"].includes(data.frag.type)) {
+                    let fragments = this.state.fragments;
+                    fragments[data.frag.type].push(
+                        {
+                            frag: data.frag,
+                            stats: data.stats
+                        }
+                    );
+                    this.setState(fragments);
+                }
+            });
+            this.mediaPlayer.on(Hls.Events.FRAG_BUFFERED, (event,data) => {
+                // console.log(`${event} ${data.frag.type} ${data.frag.sn} ${data.frag.loadIdx}`);
+            });
         }
     }
 

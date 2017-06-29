@@ -34,7 +34,7 @@ export default class HLSPlayer extends React.Component {
 
     componentWillUpdate(nextProps, nextState) {
         if (nextProps.sources.length > 0) {
-            if (! this.mediaPlayer || this.props.sources.length == 0 || nextProps.sources[0].src !== this.props.sources[0].src) {
+            if (! this.mediaPlayer || this.props.sources.length === 0 || nextProps.sources[0].src !== this.props.sources[0].src) {
                 if (this.mediaPlayer) {
                     this.mediaPlayer.detachMedia();
                     this.mediaPlayer.destroy();
