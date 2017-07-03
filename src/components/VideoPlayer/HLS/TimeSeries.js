@@ -17,24 +17,24 @@ export default class HLSTimeSeries extends React.Component {
 
     componentDidMount() {
         this.mediaPlayer = this.props.mediaPlayer;
-        this.observeMediaPlayer();
+        this.listenMediaPlayer();
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.mediaPlayer !== nextProps.mediaPlayer) {
             this.mediaPlayer = nextProps.mediaPlayer;
-            this.observeMediaPlayer();
+            this.listenMediaPlayer();
         }
     }
 
     componentWillUnmount() {
         if (this.mediaPlayer) {
-            this.mediaPlayer.off(Hls.Events.FRAG_LOADED, null);
+            this.mediaPlayer.destroy();
             this.mediaPlayer = null;
         }
     }
     
-    observeMediaPlayer() {
+    listenMediaPlayer() {
         if (this.mediaPlayer) {
             this.mediaPlayer.on(Hls.Events.FRAG_LOADED, (event, data ) => {
                 // console.log(`${event} ${data.frag.type} ${data.frag.sn} ${data.frag.loadIdx}`);
@@ -51,6 +51,19 @@ export default class HLSTimeSeries extends React.Component {
             });
             this.mediaPlayer.on(Hls.Events.FRAG_BUFFERED, (event,data) => {
                 // console.log(`${event} ${data.frag.type} ${data.frag.sn} ${data.frag.loadIdx}`);
+            });
+            this.mediaPlayer.on(Hls.Events.ERROR, (event, data) => {
+                var errorType = data.type;
+                var errorDetails = data.details;
+                var errorFatal = data.fatal;
+
+                switch(data.details) {
+                case Hls.ErrorDetails.FRAG_LOAD_ERROR:
+                    // ....
+                    break;
+                default:
+                    break;
+                }
             });
         }
     }

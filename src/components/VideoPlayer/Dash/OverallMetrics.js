@@ -85,7 +85,7 @@ export default class DashOverallMetrics extends React.Component {
     renderStatsInfoForType(type,qualityIndex) {
         let totalSegments = qualityIndex.reduce((a,b) => a + b.card,0);
         return qualityIndex.map( x => 
-            <tr style={{backgroundColor: Colors[x.index]}} key={`${type}${x.index}AggStatLine`}>
+            <tr style={{backgroundColor: Colors.get(x.index)}} key={`${type}${x.index}AggStatLine`}>
                 <td>{x.index}</td>
                 <td>{x.description}</td>
                 <td>{x.card}</td>
@@ -110,7 +110,7 @@ export default class DashOverallMetrics extends React.Component {
                             style={{
                                 data: { stroke : "yellow",
                                         strokeWidth : x=>x.index === currentTrackIndex ? 4 : 0,
-                                        fill: x => Colors[x.index]
+                                        fill: x => Colors.get(x.index)
                                       },
                                 labels: { fontSize: 18 }
                             }}
@@ -137,9 +137,7 @@ export default class DashOverallMetrics extends React.Component {
                     );
 
                     renderComponents[type].push(
-                        <div>
-                        <Label>Total download: { Math.round(qualityIndex.reduce((acc,x)=>acc+x.bytes, 0) / 1000)} KBytes</Label>
-                        </div>
+                        <Label key={`${type}LabelTotalDownload`}>Total download: { Math.round(qualityIndex.reduce((acc,x)=>acc+x.bytes, 0) / 1000)} KBytes</Label>
                     )
                 }
             }

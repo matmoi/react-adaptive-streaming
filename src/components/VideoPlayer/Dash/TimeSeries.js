@@ -103,37 +103,38 @@ export default class DashTimeSeries extends React.Component {
         this.state = {
             lastUpdate: null
         };
+        this.handleMetricChanged = this.handleMetricChanged.bind(this);
     }
     
     componentDidMount() {
         const { mediaPlayer } = this.props;
-        this.observeMediaPlayer(mediaPlayer);
+        this.listenMediaPlayer(mediaPlayer);
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.mediaPlayer !== nextProps.mediaPlayer) {
-            this.observeMediaPlayer(nextProps.mediaPlayer);
+            this.listenMediaPlayer(nextProps.mediaPlayer);
         }
     }
 
     componentWillUnmount() {
         if (this.mediaPlayer) {
-            this.mediaPlayer.off(dashjs.MediaPlayer.events.METRIC_CHANGED, null);
+            this.mediaPlayer.off(dashjs.MediaPlayer.events.METRIC_CHANGED, this.handleMetricChanged);
             this.mediaPlayer = null;
         }
     }
 
-    observeMediaPlayer(mediaPlayer) {
+    handleMetricChanged(change) {
+        let now = Date.now();
+        if (this.state.lastUpdate === null || now - this.state.lastUpdate > 2000) {
+            this.setState({lastUpdate:now});
+            this.forceUpdate();
+        }
+    }
+
+    listenMediaPlayer(mediaPlayer) {
         if (mediaPlayer) {
-            mediaPlayer.on(dashjs.MediaPlayer.events.METRIC_CHANGED,
-                function (change) {
-                    let now = Date.now();
-                    if (this.state.lastUpdate === null || now - this.state.lastUpdate > 2000) {
-                        this.setState({lastUpdate:now});
-                        this.forceUpdate();
-                    }
-                }.bind(this)
-            )
+            mediaPlayer.on(dashjs.MediaPlayer.events.METRIC_CHANGED, this.handleMetricChanged);
         }
     }
 
@@ -271,7 +272,7 @@ export default class DashTimeSeries extends React.Component {
                             x="startTime"
                             y="bytes"
                             style= {{
-                                data: {fill: x=> Colors[x.quality]}
+                                data: {fill: x=> Colors.get(x.quality)}
                             }}
                             />
                     </VictoryChart>
@@ -303,7 +304,7 @@ export default class DashTimeSeries extends React.Component {
                             x="startTime"
                             y="bytes"
                             style= {{
-                                data: {fill: x=> Colors[x.quality]}
+                                data: {fill: x => Colors.get(x.quality)}
                             }}
                             />
                     </VictoryChart>
