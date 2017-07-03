@@ -1,5 +1,3 @@
-'use strict';
-
 const _colors =
     [
         "rgb(2,63,165)",

@@ -4,7 +4,7 @@ import Hls from 'hls.js';
 
 import { VictoryLegend, VictoryAxis, VictoryLine, VictoryChart, VictoryBar } from 'victory';
 import Colors from "../../utils/Colors.js";
-// import { Tabs, Tab } from 'react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 
 export default class HLSTimeSeries extends React.Component {
     
@@ -70,7 +70,27 @@ export default class HLSTimeSeries extends React.Component {
 
     render() {
         return (
-            <code>TBD</code>
+                <Tabs defaultActiveKey={2} animation={false} id="hls-timeseries-tabs">
+                    <Tab eventKey={1} title="Network">
+                    {/*{ (videoBufferLevel.length > 0 || audioBufferLevel.length > 0) &&
+                        <MediaTimeSeries VideoTimeSerie={videoBufferLevel} AudioTimeSerie={audioBufferLevel} x="t" y="level" yAxisLabel="Buffer level (s)" yAxisTickFormat={(tick) => tick / 1000} xAxis={xAxis}/>
+                    }
+                    { (videoHttpList.length > 0 || audioHttpList.length > 0) &&
+                        <div>
+                            <MediaTimeSeries VideoTimeSerie={videoHttpList} AudioTimeSerie={audioHttpList} x="trequest" y="interval" yAxisLabel="Latency (s)" yAxisTickFormat={(tick) => tick / 1000} xAxis={xAxis}/>
+                            <MediaTimeSeries VideoTimeSerie={videoHttpList} AudioTimeSerie={audioHttpList} x="trequest" y={x => x.bytes * 8 / x.interval} yAxisLabel="Download (kbps)" xAxis={xAxis} interpolation="bundle"/>
+                        </div>
+                    }
+                    { (videoSchedulingInfo.length > 0 || audioSchedulingInfo.length > 0) &&
+                            <MediaTimeSeries VideoTimeSerie={videoSchedulingInfo} AudioTimeSerie={audioSchedulingInfo} x="t" y="quality" yAxisLabel="QualityIdx" xAxis={xAxis} interpolation="stepAfter"/>
+                    }*/}
+                </Tab>
+                    <Tab eventKey={2} title="Presentation">
+                    {/*{ (videoSchedulingInfo.length > 0 || audioSchedulingInfo.length > 0) &&
+                            this.renderMediaSegmentSizeBarChart(videoSchedulingInfo, audioSchedulingInfo)
+                    }*/}
+                </Tab>
+            </Tabs>
         );
     }
 };
