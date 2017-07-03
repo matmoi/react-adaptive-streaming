@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import Hls from 'hls.js';
 
 import { VictoryLegend, VictoryAxis, VictoryLine, VictoryChart, VictoryBar } from 'victory';
-import Colors from "../../utils/Colors.js";
+import Colors from '../../utils/Colors.js';
+import NetworkTimeSeries from '../../utils/NetworkTimeSeries.js';
 import { Tabs, Tab } from 'react-bootstrap';
 
 export default class HLSTimeSeries extends React.Component {
@@ -11,7 +12,11 @@ export default class HLSTimeSeries extends React.Component {
     constructor(...args) {
         super(...args);
         this.state = {
-            fragments: {audio:[],main:[]}
+            fragments: {audio:[],main:[]},
+        };
+        this.currentFrag = {
+            audio:null, // last played audio fragment
+            main:null   // last played video fragment
         };
     }
 
@@ -36,21 +41,26 @@ export default class HLSTimeSeries extends React.Component {
     
     listenMediaPlayer() {
         if (this.mediaPlayer) {
-            this.mediaPlayer.on(Hls.Events.FRAG_LOADED, (event, data ) => {
+            this.mediaPlayer.on(Hls.Events.FRAG_BUFFERED, function(event,data) {
                 // console.log(`${event} ${data.frag.type} ${data.frag.sn} ${data.frag.loadIdx}`);
-                if (["audio","main"].includes(data.frag.type)) {
-                    let fragments = this.state.fragments;
-                    fragments[data.frag.type].push(
+                if (["audio","main"].includes(data.id) && Number.isInteger(data.frag.sn)) {
+                    let frags = this.state.fragments;
+                    frags[data.frag.type].push(
                         {
                             frag: data.frag,
-                            stats: data.stats
+                            stats: data.stats,
+                            buffer: {
+                                level: this.currentFrag[data.id] ? data.frag.startPTS - this.currentFrag[data.id].startPTS : data.frag.startPTS
+                            }
                         }
                     );
-                    this.setState(fragments);
+                    this.setState({fragments:frags});
                 }
-            });
-            this.mediaPlayer.on(Hls.Events.FRAG_BUFFERED, (event,data) => {
-                // console.log(`${event} ${data.frag.type} ${data.frag.sn} ${data.frag.loadIdx}`);
+            }.bind(this));
+            this.mediaPlayer.on(Hls.Events.FRAG_CHANGED, (event,data) => {
+                if (["audio","main"].includes(data.type)) {
+                    this.currentFrag[data.frag.type] = data.frag;
+                }
             });
             this.mediaPlayer.on(Hls.Events.ERROR, (event, data) => {
                 var errorType = data.type;
@@ -69,9 +79,29 @@ export default class HLSTimeSeries extends React.Component {
     }
 
     render() {
+        const maxTime = Math.max(
+            this.state.fragments.main.length > 0 ? this.state.fragments.main[this.state.fragments.main.length-1].stats.tbuffered : 0,
+            this.state.fragments.audio.length > 0 ? this.state.fragments.audio[this.state.fragments.audio.length-1].stats.tbuffered : 0
+        );
+        const xAxis =
+            <VictoryAxis
+                dependentAxis={false}
+                tickValues={Array.from({length: 10}, (v, k) => k*Math.max((Math.round((maxTime) / 10000) * 1000),1000))}
+                tickFormat={(x) => x / 1000}
+                style={{
+                    axis: {stroke: "#756f6a"},
+                    ticks: {stroke: "grey"},
+                    tickLabels: {fontSize: 8, padding: 0}
+                }}
+            />;
         return (
                 <Tabs defaultActiveKey={2} animation={false} id="hls-timeseries-tabs">
                     <Tab eventKey={1} title="Network">
+                        <NetworkTimeSeries VideoTimeSerie={this.state.fragments.main} AudioTimeSerie={this.state.fragments.audio} x="stats.tbuffered" y="buffer.level" yAxisLabel="Buffer level (s)" xAxis={xAxis}/>
+                        <NetworkTimeSeries VideoTimeSerie={this.state.fragments.main} AudioTimeSerie={this.state.fragments.audio} x="stats.trequest" y={y => y.stats.tload-y.stats.tfirst} yAxisLabel="Latency (s)" yAxisTickFormat={(tick) => tick / 1000} xAxis={xAxis}/>
+                        <NetworkTimeSeries VideoTimeSerie={this.state.fragments.main} AudioTimeSerie={this.state.fragments.audio} x="stats.trequest" y={y => y.stats.bwEstimate || 0} yAxisLabel="Bw estimate (kbps)" yAxisTickFormat={(tick) => tick / 1000} xAxis={xAxis} interpolation="bundle"/>
+                        <NetworkTimeSeries VideoTimeSerie={this.state.fragments.main} AudioTimeSerie={this.state.fragments.audio} x="stats.trequest" y="frag.level" yAxisLabel="QualityIdx" xAxis={xAxis} interpolation="stepAfter"/>
+    
                     {/*{ (videoBufferLevel.length > 0 || audioBufferLevel.length > 0) &&
                         <MediaTimeSeries VideoTimeSerie={videoBufferLevel} AudioTimeSerie={audioBufferLevel} x="t" y="level" yAxisLabel="Buffer level (s)" yAxisTickFormat={(tick) => tick / 1000} xAxis={xAxis}/>
                     }
