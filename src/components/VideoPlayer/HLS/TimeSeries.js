@@ -12,21 +12,19 @@ export default class HLSTimeSeries extends React.Component {
     constructor(...args) {
         super(...args);
         this.state = {
-            fragments: {audio:[],main:[]},
-        };
-        this.currentFrag = {
-            audio:null, // last played audio fragment
-            main:null   // last played video fragment
+            fragments: {audio:[],main:[]}
         };
     }
 
     componentDidMount() {
         this.mediaPlayer = this.props.mediaPlayer;
+        this.reset();
         this.listenMediaPlayer();
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.mediaPlayer !== nextProps.mediaPlayer) {
+            this.reset();
             this.mediaPlayer = nextProps.mediaPlayer;
             this.listenMediaPlayer();
         }
@@ -34,6 +32,7 @@ export default class HLSTimeSeries extends React.Component {
 
     componentWillUnmount() {
         if (this.mediaPlayer) {
+            this.reset();
             this.mediaPlayer.destroy();
             this.mediaPlayer = null;
         }
@@ -78,7 +77,32 @@ export default class HLSTimeSeries extends React.Component {
         }
     }
 
+    reset() {
+        this.setState(
+            {
+                fragments: {audio:[],main:[]},
+            }
+        );
+        this.currentFrag = {
+            audio:null, // last played audio fragment
+            main:null   // last played video fragment
+        };
+    }
+
     render() {
+        if (this.state.fragments.main.length === 0 && this.state.fragments.audio.length === 0) {
+            return (
+                <div>
+                    <code>Waiting for fragments</code>
+                </div>
+            );
+        }
+        const minTime = Math.min(
+            ...[
+                this.state.fragments.main.length > 0 && this.state.fragments.main[0].stats.trequest,
+                this.state.fragments.audio.length > 0 && this.state.fragments.audio[0].stats.trequest
+            ].filter(x => x)
+        );
         const maxTime = Math.max(
             this.state.fragments.main.length > 0 ? this.state.fragments.main[this.state.fragments.main.length-1].stats.tbuffered : 0,
             this.state.fragments.audio.length > 0 ? this.state.fragments.audio[this.state.fragments.audio.length-1].stats.tbuffered : 0
@@ -86,8 +110,8 @@ export default class HLSTimeSeries extends React.Component {
         const xAxis =
             <VictoryAxis
                 dependentAxis={false}
-                tickValues={Array.from({length: 10}, (v, k) => k*Math.max((Math.round((maxTime) / 10000) * 1000),1000))}
-                tickFormat={(x) => x / 1000}
+                tickValues={Array.from({length: 10}, (v, k) => k*Math.max((Math.round((maxTime-minTime) / 10000) * 1000),1000) + minTime)}
+                tickFormat={(x) => Math.round((x-minTime) / 1000)}
                 style={{
                     axis: {stroke: "#756f6a"},
                     ticks: {stroke: "grey"},

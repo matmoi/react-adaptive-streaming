@@ -145,11 +145,11 @@ export default class DashOverallMetrics extends React.Component {
         return (
             <div>
                 <ButtonGroup vertical block key={`VideoQualityIdxHeader`}>
-                    <Button disabled bsStyle="primary">{`video metrics`}</Button>
+                    <Button disabled bsStyle="primary">{`video fragments`}</Button>
                 </ButtonGroup>
                 {renderComponents.video}
                 <ButtonGroup vertical block key={`AudioQualityIdxHeader`}>
-                    <Button disabled bsStyle="primary">{`audio metrics`}</Button>
+                    <Button disabled bsStyle="primary">{`audio fragments`}</Button>
                 </ButtonGroup>
                 {renderComponents.audio}
             </div>
