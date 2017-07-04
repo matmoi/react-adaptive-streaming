@@ -20,7 +20,8 @@ export default class HLSPlayer extends React.Component {
             currentFrag : {
                 audio:null, // last played audio fragment
                 main:null   // last played video fragment
-            }
+            },
+            errors:[]
         };
     }
 
@@ -91,17 +92,9 @@ export default class HLSPlayer extends React.Component {
                 }
             });
             this.mediaPlayer.on(Hls.Events.ERROR, (event, data) => {
-                var errorType = data.type;
-                var errorDetails = data.details;
-                var errorFatal = data.fatal;
-
-                switch(data.details) {
-                case Hls.ErrorDetails.FRAG_LOAD_ERROR:
-                    // ....
-                    break;
-                default:
-                    break;
-                }
+                let errors = this.state.errors;
+                errors.push({t:new Date(),...data});
+                this.setState({errors:errors});
             });
         }
     }
@@ -116,7 +109,8 @@ export default class HLSPlayer extends React.Component {
                 currentFrag : {
                     audio:null, // last played audio fragment
                     main:null   // last played video fragment
-                }
+                },
+                errors: []
             }
         );
     }
@@ -129,7 +123,7 @@ export default class HLSPlayer extends React.Component {
                 </Col>
                 <Col md={6}>
                     <video autoPlay controls ref={node => this.videoNode = node} style={{ width: "100%" }} />
-                    <HLSTimeSeries videoFragments={this.state.fragments.main} audioFragments={this.state.fragments.audio} />
+                    <HLSTimeSeries videoFragments={this.state.fragments.main} audioFragments={this.state.fragments.audio} errors={this.state.errors} />
                 </Col>
                 <Col md={2}>
                     <HLSOverallMetrics fragments={this.state.fragments}

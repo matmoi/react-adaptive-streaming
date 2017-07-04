@@ -5,12 +5,12 @@ import { VictoryAxis } from 'victory';
 import Colors from '../../utils/Colors.js';
 import NetworkTimeSeries from '../../utils/NetworkTimeSeries.js';
 import PresentationTimeSeries from '../../utils/PresentationTimeSeries.js';
-import { Tabs, Tab } from 'react-bootstrap';
+import { Tabs, Tab, Label, Badge } from 'react-bootstrap';
 
 export default class HLSTimeSeries extends React.Component {
 
     render() {
-        const {videoFragments, audioFragments } = this.props;
+        const {videoFragments, audioFragments, errors } = this.props;
         if (videoFragments.length === 0 && audioFragments.length === 0) {
             return (
                 <div>
@@ -39,6 +39,8 @@ export default class HLSTimeSeries extends React.Component {
                     tickLabels: {fontSize: 8, padding: 0}
                 }}
             />;
+        const errorBadge =
+            <div>Errors { ' ' }<Badge>{ errors.length }</Badge></div>;
         return (
             <Tabs defaultActiveKey={2} animation={false} id="hls-timeseries-tabs">
                 <Tab eventKey={1} title="Network">
@@ -50,6 +52,16 @@ export default class HLSTimeSeries extends React.Component {
                 <Tab eventKey={2} title="Presentation">
                     <PresentationTimeSeries VideoTimeSerie={videoFragments} AudioTimeSerie={audioFragments} x="frag.startPTS" y="stats.total" yAxisTickFormat={y => y / 1000} fillColor={c => Colors.get(c.frag.level)} />
                 </Tab>
+                <Tab eventKey={3} title={ errorBadge } disabled={errors.length === 0}>
+                    {errors.map((err, i) =>
+                        <div key={i}>
+                            <Label>{`${err.t.getHours()}:${err.t.getMinutes()}:${err.t.getSeconds()}.${err.t.getMilliseconds()}`}</Label>
+                            {err.fatal && <Label bsStyle="danger">Fatal</Label>}
+                            <Label bsStyle="info">{err.type}</Label>
+                            <code>{err.details}</code>
+                        </div>
+                    )}
+                </Tab>
             </Tabs>
         );
     }
@@ -57,10 +69,12 @@ export default class HLSTimeSeries extends React.Component {
 
 HLSTimeSeries.propTypes = {
     videoFragments:PropTypes.array,
-    audioFragments:PropTypes.array
+    audioFragments:PropTypes.array,
+    errors:PropTypes.array
 };
 
 HLSTimeSeries.defaultProps = {
     videoFragments:[],
-    audioFragments:[]
+    audioFragments:[],
+    errors:[]
 };
