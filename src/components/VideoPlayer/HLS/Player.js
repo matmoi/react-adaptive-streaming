@@ -4,19 +4,23 @@ import PropTypes from 'prop-types';
 import { Col, Row } from 'react-bootstrap';
 import HLSInfo from './Info.js';
 import HLSTimeSeries from './TimeSeries.js';
+import HLSOverallMetrics from './OverallMetrics.js';
 
 export default class HLSPlayer extends React.Component {
 
     mediaPlayer = null;
-    currentFrag = {
-        audio:null, // last played audio fragment
-        main:null   // last played video fragment
-    };
 
     constructor(...args) {
         super(...args);
         this.state = {
-            fragments: {audio:[],main:[]}
+            fragments: {
+                audio:[],
+                main:[]
+            },
+            currentFrag : {
+                audio:null, // last played audio fragment
+                main:null   // last played video fragment
+            }
         };
     }
 
@@ -63,7 +67,7 @@ export default class HLSPlayer extends React.Component {
 
     listenMediaPlayer() {
         if (this.mediaPlayer) {
-            this.mediaPlayer.on(Hls.Events.FRAG_BUFFERED, function(event,data) {
+            this.mediaPlayer.on(Hls.Events.FRAG_BUFFERED, (event,data) => {
                 // console.log(`${event} ${data.frag.type} ${data.frag.sn} ${data.frag.loadIdx}`);
                 if (["audio","main"].includes(data.id) && Number.isInteger(data.frag.sn)) {
                     let frags = this.state.fragments;
@@ -72,16 +76,18 @@ export default class HLSPlayer extends React.Component {
                             frag: data.frag,
                             stats: data.stats,
                             buffer: {
-                                level: this.currentFrag[data.id] ? data.frag.startPTS - this.currentFrag[data.id].startPTS : data.frag.startPTS
+                                level: this.state.currentFrag[data.id] ? data.frag.startPTS - this.state.currentFrag[data.id].startPTS : data.frag.startPTS
                             }
                         }
                     );
                     this.setState({fragments:frags});
                 }
-            }.bind(this));
+            });
             this.mediaPlayer.on(Hls.Events.FRAG_CHANGED, (event,data) => {
-                if (["audio","main"].includes(data.type)) {
-                    this.currentFrag[data.frag.type] = data.frag;
+                if (["audio","main"].includes(data.frag.type)) {
+                    const currentFrag = this.state.currentFrag;
+                    currentFrag[data.frag.type] = data.frag;
+                    this.setState({currentFrag:currentFrag});
                 }
             });
             this.mediaPlayer.on(Hls.Events.ERROR, (event, data) => {
@@ -103,13 +109,16 @@ export default class HLSPlayer extends React.Component {
     reset() {
         this.setState(
             {
-                fragments: {audio:[],main:[]},
+                fragments : {
+                    audio:[],
+                    main:[]
+                },
+                currentFrag : {
+                    audio:null, // last played audio fragment
+                    main:null   // last played video fragment
+                }
             }
         );
-        this.currentFrag = {
-            audio:null, // last played audio fragment
-            main:null   // last played video fragment
-        };
     }
 
     render() {
@@ -122,8 +131,16 @@ export default class HLSPlayer extends React.Component {
                     <video autoPlay controls ref={node => this.videoNode = node} style={{ width: "100%" }} />
                     <HLSTimeSeries videoFragments={this.state.fragments.main} audioFragments={this.state.fragments.audio} />
                 </Col>
-                <Col md={1}>
-                    <code>Overall metrics (TBD)</code>
+                <Col md={2}>
+                    <HLSOverallMetrics fragments={this.state.fragments}
+                        currentLevel={{
+                            main:this.mediaPlayer ? this.mediaPlayer.currentLevel : null,
+                            audio:this.mediaPlayer ? this.mediaPlayer.audioTrack : null,
+                        }}
+                        levels={{
+                            main:this.mediaPlayer ? this.mediaPlayer.levels : null,
+                            audio:this.mediaPlayer ? this.mediaPlayer.audioTracks : null
+                        }}/>
                 </Col>
             </Row>
         );

@@ -8,7 +8,7 @@ import { Label, Button, ButtonGroup, Table } from 'react-bootstrap';
 import Colors from "../../utils/Colors.js"
 
 export default class DashOverallMetrics extends React.Component {
-    
+
     mediaPlayer = null;
     
     constructor(...args) {
@@ -116,7 +116,7 @@ export default class DashOverallMetrics extends React.Component {
                                       },
                                 labels: { fontSize: 18 }
                             }}
-                            key={`${type}QualityIdx`}
+                            key={`dash${type}QualityIdx`}
                             padding={{top:40,left:0,right:0,bottom:40}}
                             labels={x => (qualityIndex.filter(i => i.description === x.description).length > 1 ? `${x.description}[${x.index}]`:x.description)} //more than one index have same label ? then append index to label
                         />
@@ -139,8 +139,8 @@ export default class DashOverallMetrics extends React.Component {
                     );
 
                     renderComponents[type].push(
-                        <div>
-                            <Label key={`${type}LabelTotalDownload`}>Total download: { Math.round(qualityIndex.reduce((acc,x)=>acc+x.bytes, 0) / 1000)} KBytes</Label>
+                        <div key={`dash${type}LabelTotalDownload`}>
+                            <Label>Total download: { Math.round(qualityIndex.reduce((acc,x)=>acc+x.bytes, 0) / 1000)} KBytes</Label>
                         </div>
                     )
                 }
@@ -148,12 +148,12 @@ export default class DashOverallMetrics extends React.Component {
         }
         return (
             <div>
-                <ButtonGroup vertical block key={`VideoQualityIdxHeader`}>
-                    <Button disabled bsStyle="primary">{`video fragments`}</Button>
+                <ButtonGroup vertical block key='dashVideoQualityIdxHeader'>
+                    <Button disabled bsStyle="primary">video fragments</Button>
                 </ButtonGroup>
                 {renderComponents.video}
-                <ButtonGroup vertical block key={`AudioQualityIdxHeader`}>
-                    <Button disabled bsStyle="primary">{`audio fragments`}</Button>
+                <ButtonGroup vertical block key='dashAudioQualityIdxHeader'>
+                    <Button disabled bsStyle="primary">audio fragments</Button>
                 </ButtonGroup>
                 {renderComponents.audio}
             </div>
