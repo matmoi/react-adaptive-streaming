@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dashjs from 'dashjs';
 
-import { VictoryLegend, VictoryAxis, VictoryLine, VictoryChart, VictoryBar } from 'victory';
-import Colors from "../../utils/Colors.js";
-import NetworkTimeSeries from "../../utils/NetworkTimeSeries.js";
+import { VictoryAxis } from 'victory';
+import Colors from '../../utils/Colors.js';
+import NetworkTimeSeries from '../../utils/NetworkTimeSeries.js';
+import PresentationTimeSeries from '../../utils/PresentationTimeSeries.js';
 import { Tabs, Tab } from 'react-bootstrap';
 
 export default class DashTimeSeries extends React.Component {
@@ -127,11 +128,11 @@ export default class DashTimeSeries extends React.Component {
                      <Tabs defaultActiveKey={2} animation={false} id="dash-timeseries-tabs">
                          <Tab eventKey={1} title="Network">
                             { (videoBufferLevel.length > 0 || audioBufferLevel.length > 0) &&
-                                <NetworkTimeSeries VideoTimeSerie={videoBufferLevel} AudioTimeSerie={audioBufferLevel} x="t" y="level" yAxisLabel="Buffer level (s)" yAxisTickFormat={(tick) => tick / 1000} xAxis={xAxis}/>
+                                <NetworkTimeSeries VideoTimeSerie={videoBufferLevel} AudioTimeSerie={audioBufferLevel} x="t" y="level" yAxisLabel="Buffer level (s)" yAxisTickFormat={y => y / 1000} xAxis={xAxis}/>
                             }
                             { (videoHttpList.length > 0 || audioHttpList.length > 0) &&
                                 <div>
-                                    <NetworkTimeSeries VideoTimeSerie={videoHttpList} AudioTimeSerie={audioHttpList} x="trequest" y="interval" yAxisLabel="Latency (s)" yAxisTickFormat={(tick) => tick / 1000} xAxis={xAxis}/>
+                                    <NetworkTimeSeries VideoTimeSerie={videoHttpList} AudioTimeSerie={audioHttpList} x="trequest" y="interval" yAxisLabel="Latency (s)" yAxisTickFormat={y => y / 1000} xAxis={xAxis}/>
                                     <NetworkTimeSeries VideoTimeSerie={videoHttpList} AudioTimeSerie={audioHttpList} x="trequest" y={x => x.bytes * 8 / x.interval} yAxisLabel="Download (kbps)" xAxis={xAxis} interpolation="bundle"/>
                                 </div>
                             }
@@ -141,7 +142,7 @@ export default class DashTimeSeries extends React.Component {
                         </Tab>
                          <Tab eventKey={2} title="Presentation">
                             { (videoSchedulingInfo.length > 0 || audioSchedulingInfo.length > 0) &&
-                                    this.renderMediaSegmentSizeBarChart(videoSchedulingInfo, audioSchedulingInfo)
+                                <PresentationTimeSeries VideoTimeSerie={videoSchedulingInfo} AudioTimeSerie={audioSchedulingInfo} x="startTime" y="bytes" yAxisTickFormat={y => Math.round(y/1000)} fillColor={x=> Colors.get(x.quality)}/>
                             }
                         </Tab>
                     </Tabs>
@@ -151,77 +152,6 @@ export default class DashTimeSeries extends React.Component {
         return (
             <div/>
         );
-    }
-
-    renderMediaSegmentSizeBarChart(videoSchedulingInfo, audioSchedulingInfo) {
-        return (
-            <div>
-                { videoSchedulingInfo.length &&
-                    <VictoryChart height={ 100 } padding={{top: 5, bottom: 20, left: 20, right:5}}>
-                        <VictoryAxis
-                            dependentAxis={false}
-                            style={{
-                                axis: {stroke: "#756f6a"},
-                                ticks: {stroke: "grey"},
-                                tickLabels: {fontSize: 8, padding: 0}
-                            }}
-                        />
-                        <VictoryAxis
-                            dependentAxis={true}
-                            tickFormat={x => Math.round(x/1000)}
-                            label="video chunk (KB)"
-                            style={{
-                                axis: {stroke: "#756f6a"},
-                                axisLabel: {fontSize: 8, padding: 12},
-                                grid: {stroke: "grey"},
-                                ticks: {stroke: "grey"},
-                                tickLabels: {fontSize: 8, padding: 0},
-                            }}
-                        />
-                        <VictoryBar
-                            data={videoSchedulingInfo}
-                            x="startTime"
-                            y="bytes"
-                            style= {{
-                                data: {fill: x=> Colors.get(x.quality)}
-                            }}
-                            />
-                    </VictoryChart>
-                }
-                { audioSchedulingInfo.length &&
-                    <VictoryChart height={ 100 } padding={{top: 5, bottom: 20, left: 20, right:5}}>
-                        <VictoryAxis
-                            dependentAxis={false}
-                            style={{
-                                axis: {stroke: "#756f6a"},
-                                ticks: {stroke: "grey"},
-                                tickLabels: {fontSize: 8, padding: 0}
-                            }}
-                        />
-                        <VictoryAxis
-                            dependentAxis={true}
-                            tickFormat={x => Math.round(x/1000)}
-                            label="audio chunk (KB)"
-                            style={{
-                                axis: {stroke: "#756f6a"},
-                                axisLabel: {fontSize: 8, padding: 12},
-                                grid: {stroke: "grey"},
-                                ticks: {stroke: "grey"},
-                                tickLabels: {fontSize: 8, padding: 0},
-                            }}
-                        />
-                        <VictoryBar
-                            data={audioSchedulingInfo}
-                            x="startTime"
-                            y="bytes"
-                            style= {{
-                                data: {fill: x => Colors.get(x.quality)}
-                            }}
-                            />
-                    </VictoryChart>
-                }
-            </div>
-        )
     }
 };
 

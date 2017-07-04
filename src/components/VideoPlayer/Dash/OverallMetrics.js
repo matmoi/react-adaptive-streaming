@@ -8,12 +8,14 @@ import { Label, Button, ButtonGroup, Table } from 'react-bootstrap';
 import Colors from "../../utils/Colors.js"
 
 export default class DashOverallMetrics extends React.Component {
+    
+    mediaPlayer = null;
+    
     constructor(...args) {
         super(...args);
         this.state = {
             lastUpdate: null
         };
-        this.mediaPlayer = null;
     }
 
     componentDidMount() {
@@ -137,7 +139,9 @@ export default class DashOverallMetrics extends React.Component {
                     );
 
                     renderComponents[type].push(
-                        <Label key={`${type}LabelTotalDownload`}>Total download: { Math.round(qualityIndex.reduce((acc,x)=>acc+x.bytes, 0) / 1000)} KBytes</Label>
+                        <div>
+                            <Label key={`${type}LabelTotalDownload`}>Total download: { Math.round(qualityIndex.reduce((acc,x)=>acc+x.bytes, 0) / 1000)} KBytes</Label>
+                        </div>
                     )
                 }
             }

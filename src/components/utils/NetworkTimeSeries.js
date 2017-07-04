@@ -85,6 +85,5 @@ NetworkTimeSeries.defaultProps = {
     VideoTimeSerie: [],
     yAxisLabel: "",
     yAxisTickFormat: (t) => t,
-    minTime: 0,
     interpolation: "linear"
 }
